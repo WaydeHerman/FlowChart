@@ -23,7 +23,7 @@
       }
 
       #container svg {
-        {% comment %} border: 1px solid #ccc; {% endcomment %}
+        position: absolute;
       }
 
       #container .hline {
@@ -215,8 +215,8 @@
       }
 
       .ui-slider .ui-slider-handle {
-          height: 0.8em;
-          width: 0.8em;
+        height: 0.8em;
+        width: 0.8em;
       }
 
       #menu-button {
@@ -275,23 +275,36 @@
         height: 100%;
         top: 0;
         left: 0;
+        z-index: 1000;
+      }
+
+      .popup-comment-bg {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
         background: rgba(0, 0, 0, 0.1);
         z-index: 1000;
       }
 
       .popup-comment > div {
-        width: 400px;
-        height: 200px;
         margin: 50px auto 0;
         background: #fff;
+        height: 240px;
+        width: 400px;
         padding: 10px;
       }
 
       .popup-comment textarea {
+        width: 360px;
         resize: none;
-        width: 100%;
         height: 175px;
-        padding: 0;
+        margin: 20px;
+        box-sizing: border-box;
+        padding: 10px;
+        font-family: "Roboto", sans-serif;
+        line-height: 1.15;
       }
 
       .popup-comment a {
@@ -310,7 +323,6 @@
       }
 
       .box-menu-svg {
-
       }
     </style>
   </head>
@@ -334,6 +346,7 @@
     var ft = 864e5;
     var menuReveal = 0;
     var researchModeActive = 0;
+    var researchModeWidth = 600;
 
     function blink() {
       d3.selectAll(".comment-circle")
@@ -562,50 +575,6 @@
         }
       }
 
-      function researchStepAssignment() {
-        /*
-
-      Step buttons using 'assignment_no1' parameter in 'Research Mode'
-
-      */
-        o.selectAll(".connection").each(function() {
-            
-          var n = d3.select(this.parentNode).datum();
-          if (
-            +n.assignment_no1 ===
-            listOfAssignmentNumber1[researchModeAssignmentIndex]
-          ) {
-            d3.select(this).classed("active", !0);
-            var e = document.createEvent('UIEvents');
-            e.initUIEvent("click", true, true, window, 1);
-            d3.select(this).node().dispatchEvent(e);
-          } else {
-            d3.select(this).classed("active", !1);
-          }
-        });
-      }
-
-      function researchStepId() {
-        /*
-
-      Step buttons using 'id' parameter in 'Research Mode'
-
-      */
-
-        o.selectAll(".connection").each(function() {
-          var n = d3.select(this.parentNode).datum();
-          if (+n.id === listOfID[researchModeIdIndex]) {
-            d3.select(this).classed("active", !0);
-
-            var e = document.createEvent('UIEvents');
-            e.initUIEvent("click", true, true, window, 1);
-            d3.select(this).node().dispatchEvent(e);
-          } else {
-            d3.select(this).classed("active", !1);
-          }
-        });
-      }
-
       function stepAssignment() {
         /*
 
@@ -632,6 +601,17 @@
             }
             boxes.push(n.box_creator_id);
             boxes.push(n.box_creator_id2);
+          }
+
+          if (
+            +n.assignment_no1 === listOfAssignmentNumber1[assignmentIndex] &&
+            researchModeActive === 1
+          ) {
+            var ev = document.createEvent("UIEvents");
+            ev.initUIEvent("click", true, true, window, 1);
+            d3.select(this)
+              .node()
+              .dispatchEvent(e);
           }
 
           var testA = d3.select(this).style("opacity");
@@ -733,6 +713,7 @@
       */
         var boxes = [];
         e = -1;
+
         assignmentIndex = -1;
         o.selectAll(".connection").each(function() {
           var n = d3.select(this.parentNode).datum(),
@@ -754,6 +735,14 @@
             }
             boxes.push(n.box_creator_id);
             boxes.push(n.box_creator_id2);
+          }
+
+          if (+n.id === listOfID[idIndex] && researchModeActive === 1) {
+            var ev = document.createEvent("UIEvents");
+            ev.initUIEvent("click", true, true, window, 1);
+            d3.select(this)
+              .node()
+              .dispatchEvent(e);
           }
 
           var testA = d3.select(this).style("opacity");
@@ -1806,7 +1795,6 @@
         }
       });
 
-
       /*
 
       PAGE DEFINITION:
@@ -1834,9 +1822,7 @@
         .attr("width", global_width)
         .attr("height", global_height)),
         (wt = w.append("defs")),
-        (ot = w
-          .append("g")
-          .attr("transform", "translate(" + u.left + ",0)")),
+        (ot = w.append("g").attr("transform", "translate(" + u.left + ",0)")),
         (o = w
           .append("g")
           .attr("transform", "translate(" + u.left + "," + u.top + ")")),
@@ -2628,12 +2614,20 @@
           checked("License End");
         });
 
+      menu_contents
+        .append("text")
+        .text("Zoom:")
+        .style("top", "505px")
+        .style("left", "30px")
+        .style("position", "absolute")
+        .style("font-size", "12px");
+
       // comment button:
       menu_comment_button = menu_contents
         .append("a")
         .attr("href", "javascript:void(0)")
         .style("position", "absolute")
-        .style("top", "535px")
+        .style("top", "552px")
         .style("left", "32px")
         .append("img")
         .attr("src", "comment.png")
@@ -2642,7 +2636,16 @@
         .style("height", "20px")
         .on("click", function() {
           a.style("display", "inline");
+          a_bg.style("display", "inline");
         });
+
+      menu_contents
+        .append("text")
+        .text("Your Comments")
+        .style("top", "555px")
+        .style("left", "58px")
+        .style("position", "absolute")
+        .style("font-size", "12px");
 
       e = f.length - 1;
 
@@ -2681,17 +2684,9 @@
         .text("<<")
         .attr("class", "ui-button ui-widget ui-corner-all custom-button")
         .on("click", function() {
-          if (assignmentIndex >= 0 && researchModeActive !== 1) {
+          if (assignmentIndex >= 0) {
             assignmentIndex--;
             stepAssignment();
-          } else {
-            if (researchModeActive === 1) {
-              researchModeAssignmentIndex =
-                listOfAssignmentNumber1.indexOf(+researchModeAssignmentNo1) - 1;
-              if (researchModeAssignmentIndex >= 0) {
-                researchStepAssignment();
-              }
-            }
           }
         });
       /*tt.append("button")
@@ -2704,23 +2699,9 @@
         .text(">>")
         .attr("class", "ui-button ui-widget ui-corner-all custom-button")
         .on("click", function() {
-          if (
-            assignmentIndex < listOfAssignmentNumber1.length - 1 &&
-            researchModeActive !== 1
-          ) {
+          if (assignmentIndex < listOfAssignmentNumber1.length) {
             assignmentIndex++;
             stepAssignment();
-          } else {
-            if (researchModeActive === 1) {
-              researchModeAssignmentIndex =
-                listOfAssignmentNumber1.indexOf(+researchModeAssignmentNo1) + 1;
-              if (
-                researchModeAssignmentIndex <
-                listOfAssignmentNumber1.length - 1
-              ) {
-                researchStepAssignment();
-              }
-            }
           }
         });
 
@@ -2729,16 +2710,9 @@
         .text("<")
         .attr("class", "ui-button ui-widget ui-corner-all custom-button")
         .on("click", function() {
-          if (idIndex >= 0 && researchModeActive !== 1) {
+          if (idIndex >= 0) {
             idIndex--;
             stepID();
-          } else {
-            if (researchModeActive === 1) {
-              researchModeIdIndex = listOfID.indexOf(+researchModeId) - 1;
-              if (researchModeIdIndex >= 0) {
-                researchStepId();
-              }
-            }
           }
         });
 
@@ -2747,72 +2721,21 @@
         .text(">")
         .attr("class", "ui-button ui-widget ui-corner-all custom-button")
         .on("click", function() {
-            zoomIn()
-          if (idIndex < listOfID.length - 1 && researchModeActive !== 1) {
+          if (idIndex < listOfID.length - 1) {
             idIndex++;
             stepID();
-          } else {
-            if (researchModeActive === 1) {
-              researchModeIdIndex = listOfID.indexOf(+researchModeId) + 1;
-              if (researchModeIdIndex < listOfID.length - 1) {
-                researchStepId();
-              }
-            }
           }
         });
 
       tt2 = l.append("div").attr("class", "buttons2");
-      /*
-      tt2
-        .append("button")
-        .text("L")
-        .on("mouseover", function() {
-          legend();
-        })
-        .on("mouseout", function() {
-          legend_container.html("").style("display", "none");
-        });
-
-      tt2
-        .append("button")
-        .text("A")
-        .on("click", function() {
-          i = 0;
-          s = 0;
-          sliderFunction();
-        });
-
-      tt2
-        .append("button")
-        .text("B")
-        .on("click", function() {
-          i = 100;
-          s = 100;
-          sliderFunction();
-        });
-
-      tt2
-        .append("button")
-        .text("C")
-        .on("click", function() {
-          i = 400;
-          s = 400;
-          sliderFunction();
-        }); */
-
 
       var slider = menu_contents
         .append("div")
         .attr("id", "slider3")
         .style("position", "absolute")
-        .style("top", "510px")
+        .style("top", "530px")
         .style("left", "40px")
         .style("width", "108px");
-      /* .attr("value", zoom.scaleExtent()[0])
-        .attr("min", zoom.scaleExtent()[0])
-        .attr("max", zoom.scaleExtent()[1])
-        .attr("step", (zoom.scaleExtent()[1] - zoom.scaleExtent()[0]) / 100)
-        .on("input", slided); */
 
       var ti = menu_contents
           .append("div")
@@ -2825,7 +2748,7 @@
           .append("div")
           .attr("id", "slider2")
           .style("position", "absolute")
-          .style("top", "344px") // 10
+          .style("top", "344px")
           .style("left", "40px")
           .style("width", "108px"),
         sval1 = 0,
@@ -2850,14 +2773,14 @@
           sliderFunction();
         }
       });
-      sval3 = 1
+      sval3 = 1;
       $("#slider3").slider({
         range: "min",
         value: 100,
-        min: 100,
+        min: 50,
         max: 200,
         slide: function(n, t) {
-            sval3 = t.value/100
+          sval3 = t.value / 100;
           zoomFunction();
         }
       });
@@ -2902,14 +2825,14 @@
       console.log(data.box);
       console.log(data.connection);
 
-      l.append("text")
+      l.append("span")
         .attr("id", "menu-toggle")
         .style("font-size", "14px")
-        .text("x")
+        .attr("class", "ui-icon ui-icon-close")
         .style("cursor", "pointer")
         .style("position", "fixed")
-        .style("top", "45px")
-        .style("left", "14px")
+        .style("top", "48px")
+        .style("left", "169px")
         .style("z-index", "1000");
 
       /*var textVar = "";
@@ -2949,13 +2872,18 @@
           .append("div")
           .attr("class", "legend-tooltip")
           .style("display", "none"),
+        a_bg = container
+          .append("div")
+          .attr("class", "popup-comment-bg")
+          .style("display", "none"),
         a = container
           .append("div")
           .attr("class", "popup-comment")
           .style("display", "none");
       a.html(
-        "<div><textarea><\/textarea><a class='close' href='javascript:void(0)'>Close<\/a><a class='save' href='javascript:void(0)'>Save<\/a><\/div>"
+        "<div><textarea id='popup-comment-textarea'><\/textarea><a class='close' href='javascript:void(0)'>Close<\/a><a class='save' href='javascript:void(0)'>Save<\/a><\/div>"
       );
+      d3.select("#popup-comment-textarea").style("width", "360px");
 
       o.selectAll(".connection")
         .on("mouseover", function() {
@@ -3021,7 +2949,7 @@
             */
           r.forEach(function(n, u) {
             t +=
-              "<div data-id='" +
+              "<div class='popup-div' data-id='" +
               u +
               "'><a class='close' href='javascript:void(0)'>Close<\/a>";
             t +=
@@ -3112,6 +3040,12 @@
           // end of r.forEach
           if (t.length > 0) {
             d.html(t).style("display", "inline");
+            if (researchModeActive === 1) {
+              d3.selectAll(".popup-div").style(
+                "width",
+                researchModeWidth + "px"
+              );
+            }
             if (i.document1 == null || i.document1 == "") {
               d3.select("#doc-img-0").attr("class", "greyed");
             }
@@ -3128,6 +3062,7 @@
               d.html("").style("display", "none");
               o.selectAll(".connection.active").classed("active", !1);
               researchModeActive = 0;
+              researchModeWidth = 600;
             });
             d.selectAll("a.comment").on("click", function() {
               var n =
@@ -3166,6 +3101,9 @@
                 $(".popup > div").each(function() {
                   $(this).attr("data-id") != i &&
                     $(this).css("width", t.size.width + "px");
+                  if (researchModeActive === 1) {
+                    researchModeWidth = t.size.width;
+                  }
                 });
               }
             });
@@ -3176,20 +3114,28 @@
           // end of copy-pasted
         });
 
-                        function zoomFunction() {
-                var element = document.querySelector("svg");
-                    element.style.zoom = sval3
-                    d3.select("svg").style("-moz-transform", function() {
-                        return "scale(" + sval3*100 + "%)"
-                    }).style("-moz-transform-origin", "top left")
-                    
+      function zoomFunction() {
+        var element = document.querySelector("svg");
+        element.style.zoom = sval3;
+        d3.select("svg")
+          .style("transform-origin", "top left")
+          .style("-moz-transform", function() {
+            return "scale(" + sval3 * 100 + "%)";
+          })
+          .style("-moz-transform-origin", "top left");
 
-
-
-                    
-                
-            }
-
+        if (sval3 <= 1) {
+          d3.select("svg").attr(
+            "transform",
+            "translate(" + (sval3 - 1) * -400 + ",0)"
+          );
+        } else {
+          d3.select("svg").attr(
+            "transform",
+            "translate(" + (sval3 - 1) * -60 + ",0)"
+          );
+        }
+      }
 
       /*
 
@@ -3198,21 +3144,19 @@
       */
 
       function boxmenuNEW(v, boxX, boxY) {
-        boxmenu_y = +boxY - 30;
+        boxmenu_y = +boxY - 10;
         if (v.mainCol === 1) {
           boxmenu_x = +boxX + 220;
         } else {
           boxmenu_x = +boxX - 170;
         }
 
-        boxmenu_height = 130;
+        boxmenu_height = 110;
         boxmenu_width = 130;
         boxmenuSize = 16;
         boxmenuSpacing = 8;
 
         d3.selectAll("#box-menu-svg").remove();
-
-        console.log(boxmenu_x, boxmenu_y);
 
         var boxMenuSVG = bm
           .append("svg")
@@ -3258,7 +3202,7 @@
           .attr("transform", function(d, i) {
             var height = boxmenuSize + boxmenuSpacing;
             var horz = i * height - 45;
-            var vert = -15;
+            var vert = -20;
             return "translate(" + horz + "," + vert + ")";
           });
 
@@ -3281,14 +3225,14 @@
           .append("text")
           .text("Border:")
           .attr("x", -45)
-          .attr("y", -23)
+          .attr("y", -27)
           .style("font-size", "12px");
 
         boxMenuSVG
           .append("text")
           .text("x")
           .attr("x", 40)
-          .attr("y", -40)
+          .attr("y", -28)
           .style("font-size", "14px")
           .style("cursor", "pointer")
           .on("click", function() {
@@ -3304,7 +3248,7 @@
           .attr("transform", function(d, i) {
             var height = boxmenuSize + boxmenuSpacing;
             var horz = i * height - 45;
-            var vert = 29;
+            var vert = 20;
             return "translate(" + horz + "," + vert + ")";
           });
 
@@ -3325,127 +3269,13 @@
           .append("text")
           .text("Background:")
           .attr("x", -45)
-          .attr("y", 21)
+          .attr("y", 12)
           .style("font-size", "12px");
 
         boxMenuElement = d3.select("#box-menu-svg");
         boxMenuElementWithContent = d3.selectAll(
           "#box-menu-svg, #box-menu-svg *"
         );
-      }
-
-      function boxmenu(id) {
-        boxmenu_position = legendHeight + 420;
-        boxmenu_height = 120;
-        boxmenu_width = 130;
-        boxmenuSize = 20;
-        boxmenuSpacing = 12.4;
-
-        d3.selectAll("box-menu-svg").remove();
-        d3.selectAll(".box-menu-a").remove();
-
-        var boxMenuSVG = menu_contents
-          .append("svg")
-          .style("top", boxmenu_position + "px")
-          .style("left", "40px")
-          .style("position", "fixed")
-          .attr("class", "box-menu-svg")
-          .attr("height", boxmenu_height)
-          .attr("width", boxmenu_width)
-          .append("g")
-          .attr(
-            "transform",
-            "translate(" + boxmenu_width / 2 + "," + boxmenu_height / 2 + ")"
-          );
-
-        var box_menu_items = boxMenuSVG
-          .selectAll("box-menu-legend")
-          .data(data.box_menu.border_color)
-          .enter()
-          .append("g")
-          .attr("class", "box-menu-legend")
-          .attr("transform", function(d, i) {
-            var height = boxmenuSize + boxmenuSpacing;
-            var horz = i * height - 65;
-            var vert = -10;
-            return "translate(" + horz + "," + vert + ")";
-          });
-
-        box_menu_items
-          .append("rect")
-          .attr("fill", function(d) {
-            return d;
-          })
-          .attr("x", 0)
-          .attr("y", 0)
-          .attr("width", boxmenuSize)
-          .attr("height", boxmenuSize)
-          .on("click", function(d) {
-            d3.select("#box-" + id).style("stroke", d);
-          });
-
-        boxMenuSVG
-          .append("text")
-          .text("Border:")
-          .attr("x", -59)
-          .attr("y", -18)
-          .style("font-size", "12px");
-
-        boxMenuSVG
-          .append("text")
-          .text("Box Colors:")
-          .attr("x", -66)
-          .attr("y", -42)
-          .style("font-size", "12px");
-
-        var box_menu_items2 = boxMenuSVG
-          .selectAll("box-menu-legend")
-          .data(data.box_menu.background_color)
-          .enter()
-          .append("g")
-          .attr("class", "box-menu-legend")
-          .attr("transform", function(d, i) {
-            var height = boxmenuSize + boxmenuSpacing;
-            var horz = i * height - 65;
-            var vert = 39;
-            return "translate(" + horz + "," + vert + ")";
-          });
-
-        box_menu_items2
-          .append("rect")
-          .attr("fill", function(d) {
-            return d;
-          })
-          .attr("x", 0)
-          .attr("y", 0)
-          .attr("width", boxmenuSize)
-          .attr("height", boxmenuSize)
-          .on("click", function(d) {
-            d3.select("#box-" + id).style("fill", d);
-          });
-
-        boxMenuSVG
-          .append("text")
-          .text("Background:")
-          .attr("x", -59)
-          .attr("y", 31)
-          .style("font-size", "12px");
-
-        /*boxMenuSVG
-          .append("text")
-          .attr("id", "box-menu-close-btn")
-          .text("Close")
-          .attr("x", 35)
-          .attr("y", -40);*/
-
-        /*l.append("text").html(
-          "<div><a class='close box-menu-a' href='javascript:void(0)'>Close<\/a> <\/div>"
-        );*/
-
-        d3.select("#box-menu-close-btn").on("click", function() {
-          d3.selectAll(".box-menu-svg").remove();
-          d3.selectAll(".box-menu-a").remove();
-        });
       }
 
       function legend() {
@@ -3474,6 +3304,23 @@
           d3.select("#legend-id-" + v.id).style("color", v.color);
         });
       }
+      $(".popup-comment > div").resizable({
+        handles: "e, s, se",
+        minHeight: 90,
+        minWidth: 130,
+        resize: function(n, t) {
+          $(this).css("width", t.size.width + "px");
+          d3.select("#popup-comment-textarea")
+            .style("width", t.size.width - 40 + "px")
+            .style("height", t.size.height - 65 + "px");
+        }
+      });
+
+      $(".popup-comment > div").draggable({
+        start: function() {
+          $(".popup-comment > div").css("right", "auto");
+        }
+      });
 
       $(".popup").draggable({
         start: function() {
@@ -3492,6 +3339,7 @@
       });
       $(".popup-comment .close").click(function() {
         a.style("display", "none");
+        a_bg.style("display", "none");
       });
       $(".popup-comment .save").click(function() {
         var i = a.attr("data-id"),
@@ -3502,6 +3350,7 @@
           ? (t.note1 = a.select("textarea").node().value)
           : (t.note2 = a.select("textarea").node().value);
         a.style("display", "none");
+        a_bg.style("display", "none");
       });
       $(window).scroll(function() {
         closeBoxMenu();
@@ -3511,7 +3360,9 @@
         $("#menu-contents").toggle();
         if (menuToggle === 1) {
           menuToggle = 0;
-          $(this).text(">");
+          d3.select("#menu-toggle")
+            .attr("class", "ui-icon ui-icon-triangle-1-e")
+            .style("left", "14px");
           r.attr(
             "transform",
             "translate(" + (u.left - 180) + "," + u.top + ")"
@@ -3524,7 +3375,9 @@
           l.style("width", "10px");
         } else {
           menuToggle = 1;
-          $(this).text("x");
+          d3.select("#menu-toggle")
+            .attr("class", "ui-icon ui-icon-close")
+            .style("left", "169px");
           r.attr("transform", "translate(" + u.left + "," + u.top + ")");
           o.attr("transform", "translate(" + u.left + "," + u.top + ")");
           ot.attr("transform", "translate(" + u.left + ",0)");
