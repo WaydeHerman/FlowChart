@@ -291,7 +291,7 @@
       .popup-comment > div {
         margin: 50px auto 0;
         background: #fff;
-        height: 240px;
+        height: 230px;
         width: 400px;
         padding: 10px;
       }
@@ -618,9 +618,9 @@
             d3.select(this)
               .node()
               .dispatchEvent(ev);
-              d3.select(this).style("stroke-width", 5) 
+            d3.select(this).style("stroke-width", 5);
           } else {
-            d3.select(this).style("stroke-width", 2)
+            d3.select(this).style("stroke-width", 2);
           }
 
           var testA = d3.select(this).style("opacity");
@@ -752,9 +752,9 @@
             d3.select(this)
               .node()
               .dispatchEvent(ev);
-            d3.select(this).classed("active", !0) 
+            d3.select(this).classed("active", !0);
           } else {
-            d3.select(this).classed("active", !1)
+            d3.select(this).classed("active", !1);
           }
 
           var testA = d3.select(this).style("opacity");
@@ -2773,7 +2773,7 @@
         slide: function(n, t) {
           sval1 = t.value;
           sliderFunction();
-        },  
+        }
       });
       $("#slider2").slider({
         range: "min",
@@ -2794,7 +2794,7 @@
         slide: function(n, t) {
           sval3 = t.value / 100;
           zoomFunction();
-        },  
+        }
       });
 
       /*
@@ -2893,9 +2893,13 @@
           .attr("class", "popup-comment")
           .style("display", "none");
       a.html(
-        "<div><textarea id='popup-comment-textarea'><\/textarea><a class='close' href='javascript:void(0)'>Close<\/a><a class='save' href='javascript:void(0)'>Save<\/a><\/div>"
+        "<div id='popup-comment-container'><img class='close' id='close-btn' src='close_icon.png'><textarea id='popup-comment-textarea'><\/textarea><\/div>"
       );
       d3.select("#popup-comment-textarea").style("width", "360px");
+
+      d3.select("#close-btn")
+        .style("cursor", "pointer")
+        .style("float", "right");
 
       o.selectAll(".connection")
         .on("mouseover", function() {
@@ -2929,8 +2933,10 @@
             l;
           researchModeAssignmentNo1 = i.assignment_no1;
           researchModeId = i.id;
-          if (o.selectAll(".connection.active").classed("active", !1) && researchModeActive === 0) {
-            console.log('test')
+          if (
+            o.selectAll(".connection.active").classed("active", !1) &&
+            researchModeActive === 0
+          ) {
             d3.select(this).classed("active", !0);
           }
           if (h.length > 0) {
@@ -3073,9 +3079,9 @@
             }
             d.selectAll("a.close").on("click", function() {
               d.html("").style("display", "none");
-                o.selectAll(".connection.active").classed("active", !1);
-                o.selectAll(".connection").style("stroke-width", 2)
-              
+              o.selectAll(".connection.active").classed("active", !1);
+              o.selectAll(".connection").style("stroke-width", 2);
+
               researchModeActive = 0;
               researchModeWidth = 600;
             });
@@ -3132,24 +3138,13 @@
       function zoomFunction() {
         var element = document.querySelector("svg");
         element.style.zoom = sval3;
+
         d3.select("svg")
-          .style("transform-origin", "top left")
           .style("-moz-transform", function() {
             return "scale(" + sval3 * 100 + "%)";
           })
           .style("-moz-transform-origin", "top left");
-
-        if (sval3 <= 1) {
-          d3.select("svg").attr(
-            "transform",
-            "translate(" + (sval3 - 1) * -400 + ",0)"
-          );
-        } else {
-          d3.select("svg").attr(
-            "transform",
-            "translate(" + (sval3 - 1) * -60 + ",0)"
-          );
-        }
+        d.style("zoom", sval3 * 0.9);
       }
 
       /*
@@ -3254,7 +3249,7 @@
             d3.selectAll("#box-menu-svg").remove();
           }); */
 
-                  boxMenuSVG
+        boxMenuSVG
           .append("image")
           .attr("href", "close_icon.png")
           .attr("x", 42)
@@ -3338,7 +3333,7 @@
           $(this).css("width", t.size.width + "px");
           d3.select("#popup-comment-textarea")
             .style("width", t.size.width - 40 + "px")
-            .style("height", t.size.height - 65 + "px");
+            .style("height", t.size.height - 55 + "px");
         }
       });
 
@@ -3367,7 +3362,7 @@
         a.style("display", "none");
         a_bg.style("display", "none");
       });
-      $(".popup-comment .save").click(function() {
+      /*$(".popup-comment .save").click(function() {
         var i = a.attr("data-id"),
           t = data.connection.filter(function(n) {
             return n.id == i;
@@ -3377,7 +3372,7 @@
           : (t.note2 = a.select("textarea").node().value);
         a.style("display", "none");
         a_bg.style("display", "none");
-      });
+      });*/
       $(window).scroll(function() {
         closeBoxMenu();
       });
