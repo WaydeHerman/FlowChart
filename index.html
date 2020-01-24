@@ -611,7 +611,7 @@
             ev.initUIEvent("click", true, true, window, 1);
             d3.select(this)
               .node()
-              .dispatchEvent(e);
+              .dispatchEvent(ev);
           }
 
           var testA = d3.select(this).style("opacity");
@@ -742,7 +742,7 @@
             ev.initUIEvent("click", true, true, window, 1);
             d3.select(this)
               .node()
-              .dispatchEvent(e);
+              .dispatchEvent(ev);
           }
 
           var testA = d3.select(this).style("opacity");
