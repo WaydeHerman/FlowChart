@@ -324,6 +324,12 @@
 
       .box-menu-svg {
       }
+      .ui-slider {
+        pointer-events: auto;
+      }
+      .ui-slider-handle {
+        pointer-events: auto;
+      }
     </style>
   </head>
 
@@ -612,6 +618,9 @@
             d3.select(this)
               .node()
               .dispatchEvent(ev);
+              d3.select(this).style("stroke-width", 5) 
+          } else {
+            d3.select(this).style("stroke-width", 2)
           }
 
           var testA = d3.select(this).style("opacity");
@@ -743,6 +752,9 @@
             d3.select(this)
               .node()
               .dispatchEvent(ev);
+            d3.select(this).classed("active", !0) 
+          } else {
+            d3.select(this).classed("active", !1)
           }
 
           var testA = d3.select(this).style("opacity");
@@ -2471,7 +2483,7 @@
         .append("label")
         .text("Ownership")
         .style("position", "absolute")
-        .style("top", "169px")
+        .style("top", "175px")
         .style("left", "51px")
         .style("font-size", "12px");
 
@@ -2483,7 +2495,7 @@
         .attr("checked", "checked")
         .style("position", "absolute")
         .attr("id", "checkbox-ownership")
-        .style("top", "168px")
+        .style("top", "174px")
         .style("left", "28px")
         .style("width", "15px")
         .style("height", "15px")
@@ -2502,7 +2514,7 @@
           .append("label")
           .style("position", "absolute")
           .style("width", "120px")
-          .style("top", "192px")
+          .style("top", "198px")
           .style("left", "28px")
           .text("Security")
           .style("font-size", "12px");
@@ -2524,7 +2536,7 @@
         .append("label")
         .style("position", "absolute")
         .style("width", "120px")
-        .style("top", "314px")
+        .style("top", "320px")
         .style("left", "28px")
         .text("3rdParty")
         .style("font-size", "12px");
@@ -2549,7 +2561,7 @@
         .append("label")
         .style("position", "absolute")
         .style("width", "120px")
-        .style("top", "215px")
+        .style("top", "221px")
         .style("left", "28px")
         .text("Release")
         .style("font-size", "12px");
@@ -2572,7 +2584,7 @@
         .append("label")
         .style("position", "absolute")
         .style("width", "120px")
-        .style("top", "268px")
+        .style("top", "274px")
         .style("left", "28px")
         .text("License")
         .style("font-size", "12px");
@@ -2595,7 +2607,7 @@
         .append("label")
         .style("position", "absolute")
         .style("width", "120px")
-        .style("top", "291px")
+        .style("top", "297px")
         .style("left", "28px")
         .text("License End")
         .style("font-size", "12px");
@@ -2617,7 +2629,7 @@
       menu_contents
         .append("text")
         .text("Zoom:")
-        .style("top", "505px")
+        .style("top", "523px")
         .style("left", "30px")
         .style("position", "absolute")
         .style("font-size", "12px");
@@ -2627,7 +2639,7 @@
         .append("a")
         .attr("href", "javascript:void(0)")
         .style("position", "absolute")
-        .style("top", "552px")
+        .style("top", "576px")
         .style("left", "32px")
         .append("img")
         .attr("src", "comment.png")
@@ -2642,7 +2654,7 @@
       menu_contents
         .append("text")
         .text("Your Comments")
-        .style("top", "555px")
+        .style("top", "579px")
         .style("left", "58px")
         .style("position", "absolute")
         .style("font-size", "12px");
@@ -2733,7 +2745,7 @@
         .append("div")
         .attr("id", "slider3")
         .style("position", "absolute")
-        .style("top", "530px")
+        .style("top", "548px")
         .style("left", "40px")
         .style("width", "108px");
 
@@ -2741,14 +2753,14 @@
           .append("div")
           .attr("id", "slider1")
           .style("position", "absolute")
-          .style("top", "245px")
+          .style("top", "251px")
           .style("left", "40px")
           .style("width", "108px"),
         kt = menu_contents
           .append("div")
           .attr("id", "slider2")
           .style("position", "absolute")
-          .style("top", "344px")
+          .style("top", "350px")
           .style("left", "40px")
           .style("width", "108px"),
         sval1 = 0,
@@ -2761,7 +2773,7 @@
         slide: function(n, t) {
           sval1 = t.value;
           sliderFunction();
-        }
+        },  
       });
       $("#slider2").slider({
         range: "min",
@@ -2782,7 +2794,7 @@
         slide: function(n, t) {
           sval3 = t.value / 100;
           zoomFunction();
-        }
+        },  
       });
 
       /*
@@ -2790,7 +2802,7 @@
       LEGEND DEFINITION:
 
       */
-      var legendHeight = data.legend.length * 18 + 32;
+      var legendHeight = data.legend.length * 18 + 12;
       var legendSVG = menu_contents
         .append("svg")
         .style("top", "446px")
@@ -2805,7 +2817,7 @@
       menu_contents
         .append("text")
         .text("Line Color:")
-        .style("top", "370px")
+        .style("top", "382px")
         .style("left", "30px")
         .style("position", "absolute")
         .style("font-size", "12px");
@@ -2815,7 +2827,7 @@
           .append("text")
           .attr("id", "legend-id-" + v.id)
           .text(v.tooltip)
-          .style("top", i * 18 + 388 + "px")
+          .style("top", i * 18 + 400 + "px")
           .style("left", "36px")
           .style("position", "absolute")
           .style("font-size", "12px")
@@ -2917,7 +2929,8 @@
             l;
           researchModeAssignmentNo1 = i.assignment_no1;
           researchModeId = i.id;
-          if (o.selectAll(".connection.active").classed("active", !1)) {
+          if (o.selectAll(".connection.active").classed("active", !1) && researchModeActive === 0) {
+            console.log('test')
             d3.select(this).classed("active", !0);
           }
           if (h.length > 0) {
@@ -3060,7 +3073,9 @@
             }
             d.selectAll("a.close").on("click", function() {
               d.html("").style("display", "none");
-              o.selectAll(".connection.active").classed("active", !1);
+                o.selectAll(".connection.active").classed("active", !1);
+                o.selectAll(".connection").style("stroke-width", 2)
+              
               researchModeActive = 0;
               researchModeWidth = 600;
             });
@@ -3190,8 +3205,8 @@
           .attr("x", -boxmenu_width / 2 + 10)
           .attr("y", -boxmenu_height / 2 + 10)
           .attr("fill", "none")
-          .style("stroke", "grey")
-          .style("stroke-width", "1.5px");
+          .style("stroke", "#c5c5c5")
+          .style("stroke-width", "1px");
 
         var box_menu_items = boxMenuSVG
           .selectAll("box-menu-legend")
@@ -3228,11 +3243,22 @@
           .attr("y", -27)
           .style("font-size", "12px");
 
-        boxMenuSVG
+        /* boxMenuSVG
           .append("text")
           .text("x")
           .attr("x", 40)
           .attr("y", -28)
+          .style("font-size", "14px")
+          .style("cursor", "pointer")
+          .on("click", function() {
+            d3.selectAll("#box-menu-svg").remove();
+          }); */
+
+                  boxMenuSVG
+          .append("image")
+          .attr("href", "close_icon.png")
+          .attr("x", 42)
+          .attr("y", -40)
           .style("font-size", "14px")
           .style("cursor", "pointer")
           .on("click", function() {
