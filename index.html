@@ -3145,6 +3145,22 @@
           })
           .style("-moz-transform-origin", "top left");
         d.style("zoom", sval3 * 0.9);
+
+        if (menuToggle === 1) {
+          if (sval3 <= 1) {
+            d3.select("svg").attr(
+              "transform",
+              "translate(" + (sval3 - 1) * -400 + ",0)"
+            );
+          } else {
+            d3.select("svg").attr(
+              "transform",
+              "translate(" + (sval3 - 1) * -60 + ",0)"
+            );
+          }
+        } else {
+          d3.select("svg").attr("transform", "translate(0,0)");
+        }
       }
 
       /*
@@ -3384,6 +3400,8 @@
           d3.select("#menu-toggle")
             .attr("class", "ui-icon ui-icon-triangle-1-e")
             .style("left", "14px");
+          d3.select("svg").attr("transform", "translate(0,0)");
+
           r.attr(
             "transform",
             "translate(" + (u.left - 180) + "," + u.top + ")"
@@ -3399,6 +3417,17 @@
           d3.select("#menu-toggle")
             .attr("class", "ui-icon ui-icon-close")
             .style("left", "169px");
+          if (sval3 <= 1) {
+            d3.select("svg").attr(
+              "transform",
+              "translate(" + (sval3 - 1) * -400 + ",0)"
+            );
+          } else {
+            d3.select("svg").attr(
+              "transform",
+              "translate(" + (sval3 - 1) * -60 + ",0)"
+            );
+          }
           r.attr("transform", "translate(" + u.left + "," + u.top + ")");
           o.attr("transform", "translate(" + u.left + "," + u.top + ")");
           ot.attr("transform", "translate(" + u.left + ",0)");
