@@ -14,9 +14,15 @@
     <style type="text/css">
       @import url("https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap");
 
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
       #container {
         display: inline-block;
         margin: 0;
+
         width: 100%;
         position: relative;
         font-family: "Roboto", sans-serif;
@@ -89,6 +95,12 @@
         background: #555;
         color: #fff;
         font-size: 12px;
+      }
+
+      .tooltip {
+        font-size: 12px;
+        fill: #fff;
+        pointer-events: none;
       }
 
       .menu-logo {
@@ -1813,7 +1825,7 @@
 
       */
       var container = d3.select("#container"),
-        u = { top: 40, left: 260, right: 20, bottom: 40 },
+        u = { top: 40, left: 220, right: 20, bottom: 40 },
         et = d3.sum(t, function(n) {
           return n.leftPad + n.sub * n.subWidth * (n.items.length > 0 ? 1 : 0);
         }),
@@ -1832,18 +1844,14 @@
       (w = container
         .append("svg")
         .attr("width", global_width)
-        .attr("height", global_height)),
+        .attr("height", global_height)
+        .style("left", u.left + "px")
+        .style("top", u.top + "px")),
         (wt = w.append("defs")),
-        (ot = w.append("g").attr("transform", "translate(" + u.left + ",0)")),
-        (o = w
-          .append("g")
-          .attr("transform", "translate(" + u.left + "," + u.top + ")")),
-        (r = w
-          .append("g")
-          .attr("transform", "translate(" + u.left + "," + u.top + ")"));
-      bm = w
-        .append("g")
-        .attr("transform", "translate(" + u.left + "," + u.top + ")");
+        (ot = w.append("g")),
+        (o = w.append("g")),
+        (r = w.append("g"));
+      bm = w.append("g");
 
       colorOptions.forEach(function(n, t) {
         wt.append("marker")
@@ -1877,7 +1885,7 @@
       BOXES DEFINITION:
 
       */
-      b = 0;
+      b = 70;
       st = 0;
       t.forEach(function(n, index) {
         if (n.id === 0) {
@@ -1996,7 +2004,7 @@
             o.append("line")
               .attr("class", "tline")
               .datum(m)
-              .attr("x1", 0)
+              .attr("x1", 70)
               .attr("y1", m.y)
               .attr("x2", m.x - tlineDist)
               .attr("y2", m.y);
@@ -2106,7 +2114,7 @@
         o.append("text")
           .attr("class", "thead")
           .datum(n)
-          .attr("x", -10)
+          .attr("x", 60)
           .attr("y", (i + 0.5) * t[0].subHeight)
           .attr("dy", "0.32em")
           .text(n.replace("d", ""));
@@ -2115,7 +2123,7 @@
           o.append("text")
             .attr("class", "thead2")
             .datum(n)
-            .attr("x", 5)
+            .attr("x", 85)
             .attr("y", i * t[0].subHeight)
             .attr("dy", "0.32em")
             .text((new Date(n) - new Date(c[i - 1])) / ft + " days");
@@ -2872,26 +2880,25 @@
         d3.select("#legend-id-" + v.id).style("color", v.color);
       });*/
 
-      var gt = container
-          .append("div")
-          .attr("class", "tooltip")
-          .style("opacity", 0),
-        d = container
-          .append("div")
-          .attr("class", "popup")
-          .style("display", "none"),
-        legend_container = container
+      var gt = w.append("g");
+      //.append("div")
+      //.style("opacity", 0),
+      (d = container
+        .append("div")
+        .attr("class", "popup")
+        .style("display", "none")),
+        (legend_container = container
           .append("div")
           .attr("class", "legend-tooltip")
-          .style("display", "none"),
-        a_bg = container
+          .style("display", "none")),
+        (a_bg = container
           .append("div")
           .attr("class", "popup-comment-bg")
-          .style("display", "none"),
-        a = container
+          .style("display", "none")),
+        (a = container
           .append("div")
           .attr("class", "popup-comment")
-          .style("display", "none");
+          .style("display", "none"));
       a.html(
         "<div id='popup-comment-container'><img class='close' id='close-btn' src='close_icon.png'><textarea id='popup-comment-textarea'><\/textarea><\/div>"
       );
@@ -2907,14 +2914,57 @@
             var n = d3.select(this.parentNode).datum();
             //var t = data.assignments[+n.assignment_no1].original;
             i = d3.mouse(w.node());
-            gt.html(n.tooltip)
-              .style("left", i[0] + 10 + "px")
-              .style("top", i[1] - 10 + "px")
+
+            tooltipText = gt
+              .append("text")
+              .text(n.tooltip)
+              .attr("class", "tooltip")
+              .attr("x", i[0] + 20)
+              .attr("y", i[1] + 10)
+              //.style("left", i[0] + 10 + "px")
+              //.style("top", i[1] - 10 + "px")
+              .style("opacity", 1);
+            console.log(n.tooltip);
+            console.log();
+            console.log(
+              "width",
+              tooltipText.node().getBoundingClientRect().width
+            );
+            console.log(
+              "height",
+              tooltipText.node().getBoundingClientRect().height
+            );
+            tooltipRect = gt
+              .append("rect")
+              .attr(
+                "width",
+                tooltipText.node().getBoundingClientRect().width / sval3 + 20
+              )
+              .attr(
+                "height",
+                tooltipText.node().getBoundingClientRect().height / sval3 + 10
+              )
+              .attr("x", i[0] + 10)
+              .attr("y", i[1] - 5)
+              .attr("class", "tooltip-rect")
+              .attr("fill", "#555")
+              .attr("rx", 4)
+              .attr("ry", 4);
+            tooltipText = gt
+              .append("text")
+              .text(n.tooltip)
+              .attr("class", "tooltip")
+              .attr("x", i[0] + 20)
+              .attr("y", i[1] + 10)
+              //.style("left", i[0] + 10 + "px")
+              //.style("top", i[1] - 10 + "px")
               .style("opacity", 1);
           }
         })
         .on("mouseout", function() {
-          gt.style("opacity", 0);
+          d3.selectAll(".tooltip").remove();
+          d3.select(".tooltip-rect").remove();
+          //gt.style("opacity", 0);
         })
         .on("click", function() {
           researchModeActive = 1;
@@ -3136,31 +3186,17 @@
         });
 
       function zoomFunction() {
-        var element = document.querySelector("svg");
-        element.style.zoom = sval3;
+        //var element = document.querySelector("svg");
+        //element.style.zoom = sval3;
 
         d3.select("svg")
+          .style("transform", "scale(" + sval3 + ")")
           .style("-moz-transform", function() {
             return "scale(" + sval3 * 100 + "%)";
           })
-          .style("-moz-transform-origin", "top left");
+          .style("-moz-transform-origin", "top left")
+          .style("transform-origin", "left top");
         d.style("zoom", sval3 * 0.9);
-
-        if (menuToggle === 1) {
-          if (sval3 <= 1) {
-            d3.select("svg").attr(
-              "transform",
-              "translate(" + (sval3 - 1) * -400 + ",0)"
-            );
-          } else {
-            d3.select("svg").attr(
-              "transform",
-              "translate(" + (sval3 - 1) * -60 + ",0)"
-            );
-          }
-        } else {
-          d3.select("svg").attr("transform", "translate(0,0)");
-        }
       }
 
       /*
@@ -3400,38 +3436,15 @@
           d3.select("#menu-toggle")
             .attr("class", "ui-icon ui-icon-triangle-1-e")
             .style("left", "14px");
-          d3.select("svg").attr("transform", "translate(0,0)");
-
-          r.attr(
-            "transform",
-            "translate(" + (u.left - 180) + "," + u.top + ")"
-          );
-          o.attr(
-            "transform",
-            "translate(" + (u.left - 180) + "," + u.top + ")"
-          );
-          ot.attr("transform", "translate(" + (u.left - 180) + ",0)");
           l.style("width", "10px");
+          w.style("left", u.left - 180 + "px");
         } else {
           menuToggle = 1;
           d3.select("#menu-toggle")
             .attr("class", "ui-icon ui-icon-close")
             .style("left", "169px");
-          if (sval3 <= 1) {
-            d3.select("svg").attr(
-              "transform",
-              "translate(" + (sval3 - 1) * -400 + ",0)"
-            );
-          } else {
-            d3.select("svg").attr(
-              "transform",
-              "translate(" + (sval3 - 1) * -60 + ",0)"
-            );
-          }
-          r.attr("transform", "translate(" + u.left + "," + u.top + ")");
-          o.attr("transform", "translate(" + u.left + "," + u.top + ")");
-          ot.attr("transform", "translate(" + u.left + ",0)");
           l.style("width", "200px");
+          w.style("left", u.left + "px");
         }
       });
     });
