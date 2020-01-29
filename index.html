@@ -717,7 +717,7 @@
           d3.select(this).style("opacity", t);
         });
 
-        r.selectAll("a").each(function(n) {
+        r.selectAll("image").each(function(n) {
           var t = 0;
           if (boxes.indexOf(n.id) >= 0 || n.type == "Inventor") {
             t = 1;
@@ -845,7 +845,7 @@
           //console.log(n, t, n.securityOnly);
         });
 
-        r.selectAll("a").each(function(n) {
+        r.selectAll("image").each(function(n) {
           var t = 0;
           if (boxes.indexOf(n.id) >= 0 || n.type == "Inventor") {
             t = 1;
@@ -991,7 +991,7 @@
 
               //d3.select(this).style("opacity", t);
             });
-            r.selectAll("a").each(function(n) {
+            r.selectAll("image").each(function(n) {
               //var t = 1;
 
               if (v === "Security" || v === "License") {
@@ -1094,7 +1094,7 @@
 
               //d3.select(this).style("opacity", t);
             });
-            r.selectAll("a").each(function(n) {
+            r.selectAll("image").each(function(n) {
               //var t = 1;
 
               if (
@@ -1186,7 +1186,7 @@
 
               //d3.select(this).style("opacity", t);
             });
-            r.selectAll("a").each(function(n) {
+            r.selectAll("image").each(function(n) {
               //var t = 1;
 
               if (v === "Security") {
@@ -1290,7 +1290,7 @@
 
               // d3.select(this).style("opacity", t);
             });
-            r.selectAll("a").each(function(n) {
+            r.selectAll("image").each(function(n) {
               //var t = 1;
 
               if (
@@ -1357,7 +1357,7 @@
 
               //d3.select(this).style("opacity", t);
             });
-            r.selectAll("a").each(function(n) {
+            r.selectAll("image").each(function(n) {
               //var t = 1;
 
               if (n.type === v) {
@@ -1430,7 +1430,7 @@
           d3.select(this).style("opacity", t);
         });
 
-        r.selectAll("a").each(function(n) {
+        r.selectAll("image").each(function(n) {
           var t = 1;
           if (n.hide === true) {
             t = 0;
@@ -3223,11 +3223,10 @@
                     .html("-"));
             });
             $(".popup > div").resizable({
-              handles: "e , s",
+              handles: "e",
               resize: function(n, t) {
                 var i = $(this).attr("data-id");
                 var a = t.size.height - 230;
-                console.log(a);
                 //$(".popup .top").css("margin-bottom", (a + 15) + "px")
                 $(".popup > div").each(function() {
                   $(this).attr("data-id") != i &&
