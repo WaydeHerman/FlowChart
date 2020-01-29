@@ -1853,7 +1853,7 @@
 
       */
       var container = d3.select("#container"),
-        u = { top: 40, left: 220, right: 20, bottom: 40 },
+        u = { top: 40, left: 190, right: 20, bottom: 40 },
         et = d3.sum(t, function(n) {
           return n.leftPad + n.sub * n.subWidth * (n.items.length > 0 ? 1 : 0);
         }),
@@ -1866,9 +1866,9 @@
       if (global_height < window.innerHeight) {
         global_height = window.innerHeight + 20;
       }
-      global_width = et + 60 + u.right;
-      if (global_width < window.innerWidth) {
-        global_width = window.innerWidth;
+      global_width = et + 40 + u.right;
+      if (global_width < window.innerWidth - 190) {
+        global_width = window.innerWidth - 190;
       }
       (w = container
         .append("svg")
@@ -2385,7 +2385,7 @@
       topBar = container
         .append("div")
         .attr("class", "top-bar")
-        .style("width", global_width + "px")
+        .style("width", (global_width + 190) + "px")
         .style("height", "40px")
         .style("background-color", "#FAFAFA")
         .style("position", "fixed")
@@ -3499,7 +3499,11 @@
             .attr("class", "ui-icon ui-icon-triangle-1-e")
             .style("left", "14px");
           l.style("width", "10px");
-          w.style("left", u.left - 180 + "px");
+          w.style("left", 10 + "px");
+          if (global_width < window.innerWidth - 190) {
+            var topBarWidth = window.innerWidth - 190;
+            }
+          topBar.style("width", topBarWidth + "px")
         } else {
           menuToggle = 1;
           d3.select("#menu-toggle")
@@ -3507,6 +3511,7 @@
             .style("left", "169px");
           l.style("width", "200px");
           w.style("left", u.left + "px");
+          topBar.style("width", (global_width + 190) + "px")
         }
       });
     });
