@@ -130,6 +130,7 @@
         border: 1px solid #aaa;
         margin: 10px;
         position: relative;
+        min-width: 190px;
       }
 
       .box-menu-tooltip > div {
@@ -181,6 +182,7 @@
         border-spacing: 0;
         border-collapse: collapse;
         width: 100%;
+        overflow: hidden;
       }
 
       .legend-header {
@@ -290,6 +292,7 @@
         z-index: 1000;
       }
 
+      .pdf-popup-bg,
       .popup-comment-bg {
         position: fixed;
         width: 100%;
@@ -311,8 +314,8 @@
       .popup-comment textarea {
         width: 360px;
         resize: none;
-        height: 175px;
-        margin: 20px;
+        height: 200px;
+        margin: 15px;
         box-sizing: border-box;
         padding: 10px;
         font-family: "Roboto", sans-serif;
@@ -341,6 +344,31 @@
       }
       .ui-slider-handle {
         pointer-events: auto;
+      }
+
+      .popup > div > span {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        cursor: pointer;
+      }
+
+      .pdf-popup {
+        position: fixed;
+        padding: 10px;
+        top: 40px;
+        right: 0px;
+        left: auto;
+        z-index: 1000;
+      }
+
+      #pdf-close-btn {
+        position: fixed;
+        top: 30px;
+        right: 20px;
+        z-index: 1100;
+        left: auto;
+        cursor: pointer;
       }
     </style>
   </head>
@@ -1834,10 +1862,11 @@
           t[2].items.length * t[2].subHeight + t[2].preHeight
         ),
         global_height = pt + u.top + u.bottom;
+      console.log(et, u.left, u.right);
       if (global_height < window.innerHeight) {
         global_height = window.innerHeight + 20;
       }
-      global_width = et + u.left + u.right;
+      global_width = et + 60 + u.right;
       if (global_width < window.innerWidth) {
         global_width = window.innerWidth;
       }
@@ -2088,16 +2117,23 @@
               .text(" (" + f + ")");
 
             if (s) {
-              r.append("a")
+              r.append("image")
                 .datum(m)
-                .attr("xlink:href", m.document)
-                .attr("target", "_blank")
-                .append("image")
                 .attr("x", m.x - 90)
                 .attr("y", m.y - 25)
                 .attr("width", 20)
                 .attr("height", 20)
-                .attr("xlink:href", "pdf.svg");
+                .attr("xlink:href", "pdf.svg")
+                .style("cursor", "pointer")
+                .on("click", function() {
+                  var info =
+                    "<embed class='pdf-container' src='" +
+                    m.document +
+                    "' width='770px' height='1090px' />";
+
+                  pdf.html(info).style("display", "inline");
+                  pdf_bg.style("display", "inline");
+                });
             }
           }
         });
@@ -2799,6 +2835,7 @@
         value: 100,
         min: 50,
         max: 200,
+        animate: "slow",
         slide: function(n, t) {
           sval3 = t.value / 100;
           zoomFunction();
@@ -2883,10 +2920,18 @@
       var gt = w.append("g");
       //.append("div")
       //.style("opacity", 0),
-      (d = container
+      (pdf_bg = container
         .append("div")
-        .attr("class", "popup")
+        .attr("class", "pdf-popup-bg")
         .style("display", "none")),
+        (pdf = container
+          .append("div")
+          .attr("class", "pdf-popup")
+          .style("display", "none")),
+        (d = container
+          .append("div")
+          .attr("class", "popup")
+          .style("display", "none")),
         (legend_container = container
           .append("div")
           .attr("class", "legend-tooltip")
@@ -2899,6 +2944,10 @@
           .append("div")
           .attr("class", "popup-comment")
           .style("display", "none"));
+      pdf_bg
+        .append("img")
+        .attr("src", "close_icon.png")
+        .attr("id", "pdf-close-btn");
       a.html(
         "<div id='popup-comment-container'><img class='close' id='close-btn' src='close_icon.png'><textarea id='popup-comment-textarea'><\/textarea><\/div>"
       );
@@ -2924,16 +2973,6 @@
               //.style("left", i[0] + 10 + "px")
               //.style("top", i[1] - 10 + "px")
               .style("opacity", 1);
-            console.log(n.tooltip);
-            console.log();
-            console.log(
-              "width",
-              tooltipText.node().getBoundingClientRect().width
-            );
-            console.log(
-              "height",
-              tooltipText.node().getBoundingClientRect().height
-            );
             tooltipRect = gt
               .append("rect")
               .attr(
@@ -2945,7 +2984,7 @@
                 tooltipText.node().getBoundingClientRect().height / sval3 + 10
               )
               .attr("x", i[0] + 10)
-              .attr("y", i[1] - 5)
+              .attr("y", i[1] - 6)
               .attr("class", "tooltip-rect")
               .attr("fill", "#555")
               .attr("rx", 4)
@@ -3020,7 +3059,9 @@
             t +=
               "<div class='popup-div' data-id='" +
               u +
-              "'><a class='close' href='javascript:void(0)'>Close<\/a>";
+              "'><span class='close ui-icon ui-icon-close' id='close-btn-" +
+              u +
+              "' ><\/span>";
             t +=
               "<a data-id='" +
               i.id +
@@ -3036,11 +3077,9 @@
             t += "<tr><td>Execution Date<br/>" + v(n.patAssignorEarliestExDate);
             var f = r.length == 1 || u > 0 ? i.document1 : i.document2;
             t +=
-              "<a href='" +
-              f +
-              "' target='_blank' style='position: absolute; top: 42px; left: 100px;'><img src='pdf.svg' id='doc-img-" +
+              "<div style='position: absolute; top: 42px; left: 100px;'><img src='pdf.svg' id='doc-img-" +
               u +
-              "' style='width: 20px; height: 20px;' /><\/a><\/td><td>Reel/frame<br/>" +
+              "' style='width: 20px; height: 20px;' /><\/div><\/td><td>Reel/frame<br/>" +
               n.displayId +
               "<\/td><\/tr>";
             t +=
@@ -3127,13 +3166,31 @@
             if (i.comment[0][i.popup[0]][1] === "") {
               d3.select("#comment-img-1").attr("class", "greyed");
             }
-            d.selectAll("a.close").on("click", function() {
+            d.selectAll("span.close").on("click", function() {
               d.html("").style("display", "none");
               o.selectAll(".connection.active").classed("active", !1);
               o.selectAll(".connection").style("stroke-width", 2);
 
               researchModeActive = 0;
               researchModeWidth = 600;
+            });
+            d3.select("#doc-img-0").on("click", function() {
+              var info =
+                "<embed class='pdf-container' src='" +
+                i.document1 +
+                "' width='770px' height='1090px' />";
+
+              pdf.html(info).style("display", "inline");
+              pdf_bg.style("display", "inline");
+            });
+            d3.select("#doc-img-1").on("click", function() {
+              var info =
+                "<embed class='pdf-container' src='" +
+                i.document1 +
+                "' width='770px' height='1090px' />";
+
+              pdf.html(info).style("display", "inline");
+              pdf_bg.style("display", "inline");
             });
             d.selectAll("a.comment").on("click", function() {
               var n =
@@ -3166,9 +3223,12 @@
                     .html("-"));
             });
             $(".popup > div").resizable({
-              handles: "e",
+              handles: "e , s",
               resize: function(n, t) {
                 var i = $(this).attr("data-id");
+                var a = t.size.height - 230;
+                console.log(a);
+                //$(".popup .top").css("margin-bottom", (a + 15) + "px")
                 $(".popup > div").each(function() {
                   $(this).attr("data-id") != i &&
                     $(this).css("width", t.size.width + "px");
@@ -3188,7 +3248,6 @@
       function zoomFunction() {
         //var element = document.querySelector("svg");
         //element.style.zoom = sval3;
-
         d3.select("svg")
           .style("transform", "scale(" + sval3 + ")")
           .style("-moz-transform", function() {
@@ -3385,7 +3444,7 @@
           $(this).css("width", t.size.width + "px");
           d3.select("#popup-comment-textarea")
             .style("width", t.size.width - 40 + "px")
-            .style("height", t.size.height - 55 + "px");
+            .style("height", t.size.height - 35 + "px");
         }
       });
 
@@ -3427,6 +3486,10 @@
       });*/
       $(window).scroll(function() {
         closeBoxMenu();
+      });
+      d3.select("#pdf-close-btn").on("click", function() {
+        pdf.style("display", "none");
+        pdf_bg.style("display", "none");
       });
       var menuToggle = 1;
       $("#menu-toggle").click(function() {
