@@ -909,6 +909,9 @@
           check_list.push("3rdParties");
         }
 
+        // "15931", "15932", "15936", 15940", "15929", "15925"
+        // "15919", "15909", "15915", "15916"
+
         check_list.forEach(function(v) {
           if (v === "License End" || v === "License") {
             var boxToRemove = [];
@@ -1134,8 +1137,10 @@
                 n.hide = true;
                 boxToRemove.push(n.box_creator_id);
               }
-              if (n.type === "Release") {
-                boxToKeep.push(n.start_id);
+              if (check_list.indexOf("Release") < 0) {
+                if (n.type === "Release") {
+                  boxToKeep.push(n.start_id);
+                }
               }
 
               //d3.select(this).style("opacity", t);
