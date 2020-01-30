@@ -355,7 +355,7 @@
 
       .pdf-popup {
         position: fixed;
-        padding: 10px;
+        padding-top: 17px;
         right: 0px;
         left: auto;
         z-index: 1000;
@@ -1894,7 +1894,6 @@
           t[2].items.length * t[2].subHeight + t[2].preHeight
         ),
         global_height = pt + u.top + u.bottom;
-      console.log(et, u.left, u.right);
       if (global_height < window.innerHeight) {
         global_height = window.innerHeight + 20;
       }
@@ -2158,10 +2157,12 @@
                 .attr("xlink:href", "pdf.svg")
                 .style("cursor", "pointer")
                 .on("click", function() {
+                  var pdf_height = window.innerHeight - 100
+                  console.log(pdf_height)
                   var info =
                     "<iframe style='background-color: white;' class='pdf-container' src='" +
                     m.document +
-                    "' width='620px' height='870px' /><\/iframe>";
+                    "' width='620px' height='" + pdf_height + "px' /><\/iframe>";
 
                   pdf_frame.html(info);
                   pdf.style("display", "inline");
