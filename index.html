@@ -361,6 +361,10 @@
         border: 20px solid white;
       }
 
+      #comment-img-0,
+      #comment-img-1,
+      #doc-img-0,
+      #doc-img-1,
       .container > img {
         cursor: pointer;
       }
@@ -450,6 +454,7 @@
 
       */
     d3.json("6550797.json").then(function(data) {
+      data.comment = "";
       /* data.connection.forEach(function(v) {
         if (
           v.start_id != null ||
@@ -1635,6 +1640,8 @@
         });
       }
 
+      console.log(data);
+
       colorOptions = d3
         .map(data.connection, function(n) {
           return n.color;
@@ -2715,7 +2722,11 @@
         .style("width", "20px")
         .style("height", "20px")
         .on("click", function() {
-          a.style("display", "inline");
+          a.style("display", "inline")
+            .attr("data-id", "general")
+            .attr("data-idx", 0);
+          document.getElementById("popup-comment-textarea").value =
+            data.comment;
         });
 
       menu_contents
@@ -2977,6 +2988,8 @@
       );
       d3.select("#popup-comment-textarea").style("width", "370px");
 
+      //document.getElementById("popup-comment-textarea").value = data.comment;
+
       d3.select("#close-btn")
         .style("cursor", "pointer")
         //.style("float", "right")
@@ -3050,7 +3063,6 @@
           researchModeAssignmentNo1 = i.assignment_no1;
           researchModeId = i.id;
           if (o.selectAll(".connection.active").classed("active", !1)) {
-            console.log("test");
             d3.select(this).classed("active", !0);
           }
           if (h.length > 0) {
@@ -3523,6 +3535,21 @@
       });
       $(".popup-comment .ui-icon-close").click(function() {
         a.style("display", "none");
+
+        if ($(".popup-comment").attr("data-id") !== "general") {
+          data.connection.forEach(function(v) {
+            if (v.id === $(".popup-comment").attr("data-id")) {
+              v.comment[0][v.popup[0]][
+                $(".popup-comment").attr("data-idx") - 1
+              ] = document.getElementById("popup-comment-textarea").value;
+            }
+          });
+        } else {
+          data.comment = document.getElementById(
+            "popup-comment-textarea"
+          ).value;
+        }
+        //update_blinks();
       });
       /*$(".popup-comment .save").click(function() {
         var i = a.attr("data-id"),
