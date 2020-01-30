@@ -285,21 +285,8 @@
 
       .popup-comment {
         position: fixed;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
-        z-index: 1000;
-      }
-
-      .pdf-popup-bg,
-      .popup-comment-bg {
-        position: fixed;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
-        background: rgba(0, 0, 0, 0.1);
+        top: 0px;
+        left: 190px;
         z-index: 1000;
       }
 
@@ -2157,12 +2144,14 @@
                 .attr("xlink:href", "pdf.svg")
                 .style("cursor", "pointer")
                 .on("click", function() {
-                  var pdf_height = window.innerHeight - 100
-                  console.log(pdf_height)
+                  var pdf_height = window.innerHeight - 100;
+                  console.log(pdf_height);
                   var info =
                     "<iframe style='background-color: white;' class='pdf-container' src='" +
                     m.document +
-                    "' width='620px' height='" + pdf_height + "px' /><\/iframe>";
+                    "' width='620px' height='" +
+                    pdf_height +
+                    "px' /><\/iframe>";
 
                   pdf_frame.html(info);
                   pdf.style("display", "inline");
@@ -2727,7 +2716,6 @@
         .style("height", "20px")
         .on("click", function() {
           a.style("display", "inline");
-          a_bg.style("display", "inline");
         });
 
       menu_contents
@@ -2955,10 +2943,6 @@
       var gt = w.append("g");
       //.append("div")
       //.style("opacity", 0),
-      /*(pdf_bg = container
-        .append("div")
-        .attr("class", "pdf-popup-bg")
-        .style("display", "none")),*/
       (pdf = container
         .append("div")
         .attr("class", "pdf-popup")
@@ -2970,10 +2954,6 @@
         (legend_container = container
           .append("div")
           .attr("class", "legend-tooltip")
-          .style("display", "none")),
-        (a_bg = container
-          .append("div")
-          .attr("class", "popup-comment-bg")
           .style("display", "none")),
         (a = container
           .append("div")
@@ -2993,7 +2973,7 @@
       pdf_frame = pdf.append("div").attr("class", "pdf-frame");
 
       a.html(
-        "<div id='popup-comment-container'><img class='close' id='close-btn' src='close_icon.png'><textarea id='popup-comment-textarea'><\/textarea><\/div>"
+        "<div id='popup-comment-container'><span class='ui-icon ui-icon-close' id='close-btn'></span><textarea id='popup-comment-textarea'><\/textarea><\/div>"
       );
       d3.select("#popup-comment-textarea").style("width", "370px");
 
@@ -3069,10 +3049,8 @@
             l;
           researchModeAssignmentNo1 = i.assignment_no1;
           researchModeId = i.id;
-          if (
-            o.selectAll(".connection.active").classed("active", !1) &&
-            researchModeActive === 0
-          ) {
+          if (o.selectAll(".connection.active").classed("active", !1)) {
+            console.log("test");
             d3.select(this).classed("active", !0);
           }
           if (h.length > 0) {
@@ -3216,7 +3194,7 @@
             d.selectAll("span.close").on("click", function() {
               d.html("").style("display", "none");
               o.selectAll(".connection.active").classed("active", !1);
-              o.selectAll(".connection").style("stroke-width", 2);
+              //o.selectAll(".connection").style("stroke-width", 2);
 
               researchModeActive = 0;
               researchModeWidth = 600;
@@ -3543,9 +3521,8 @@
           $(".box-menu-tooltip").css("right", "auto");
         }
       });
-      $(".popup-comment .close").click(function() {
+      $(".popup-comment .ui-icon-close").click(function() {
         a.style("display", "none");
-        a_bg.style("display", "none");
       });
       /*$(".popup-comment .save").click(function() {
         var i = a.attr("data-id"),
