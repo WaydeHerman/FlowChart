@@ -356,18 +356,24 @@
       .pdf-popup {
         position: fixed;
         padding: 10px;
-        top: 40px;
         right: 0px;
         left: auto;
         z-index: 1000;
       }
 
       #pdf-close-btn {
-        position: fixed;
+        position: relative;
         top: 30px;
         right: 20px;
         z-index: 1100;
         left: auto;
+        cursor: pointer;
+      }
+      .pdf-frame > iframe {
+        border: 20px solid white;
+      }
+
+      img {
         cursor: pointer;
       }
     </style>
@@ -2134,10 +2140,11 @@
                   var info =
                     "<iframe style='background-color: white;' class='pdf-container' src='" +
                     m.document +
-                    "' width='620px' height='1090px' /><\/iframe>";
+                    "' width='620px' height='870px' /><\/iframe>";
 
-                  pdf_frame.html(info)
-                  pdf.style("display", "inline")
+                  pdf_frame.html(info);
+                  pdf.style("display", "inline");
+                  pdfClose.style("left", "638px");
                   //pdf_bg.style("display", "inline");
                 });
             }
@@ -2391,7 +2398,7 @@
       topBar = container
         .append("div")
         .attr("class", "top-bar")
-        .style("width", (global_width + 190) + "px")
+        .style("width", global_width + 190 + "px")
         .style("height", "40px")
         .style("background-color", "#FAFAFA")
         .style("position", "fixed")
@@ -2930,10 +2937,10 @@
         .append("div")
         .attr("class", "pdf-popup-bg")
         .style("display", "none")),*/
-        (pdf = container
-          .append("div")
-          .attr("class", "pdf-popup")
-          .style("display", "none")),
+      (pdf = container
+        .append("div")
+        .attr("class", "pdf-popup")
+        .style("display", "none")),
         (d = container
           .append("div")
           .attr("class", "popup")
@@ -2950,20 +2957,30 @@
           .append("div")
           .attr("class", "popup-comment")
           .style("display", "none"));
-          pdf_frame = pdf.append("div")
-            .attr("class", "pdf-frame")
-      pdf
-        .append("img")
-        .attr("src", "close_icon.png")
-        .attr("id", "pdf-close-btn");
+
+      pdfClose = pdf
+        .append("span")
+        .attr("id", "pdf-close-btn")
+        .style("font-size", "14px")
+        .style("top", "18px")
+        .style("right", "4px")
+        .attr("class", "ui-icon ui-icon-close")
+        .style("cursor", "pointer")
+        .style("z-index", "1000");
+
+      pdf_frame = pdf.append("div").attr("class", "pdf-frame");
+
       a.html(
         "<div id='popup-comment-container'><img class='close' id='close-btn' src='close_icon.png'><textarea id='popup-comment-textarea'><\/textarea><\/div>"
       );
-      d3.select("#popup-comment-textarea").style("width", "360px");
+      d3.select("#popup-comment-textarea").style("width", "370px");
 
       d3.select("#close-btn")
         .style("cursor", "pointer")
-        .style("float", "right");
+        //.style("float", "right")
+        .style("position", "absolute")
+        .style("display", "inline")
+        .style("right", "10px");
 
       o.selectAll(".connection")
         .on("mouseover", function() {
@@ -3186,18 +3203,23 @@
               var info =
                 "<iframe class='pdf-container' src='" +
                 i.document1 +
-                "' width='770px' height='1090px' /><\/iframe>";
+                "' width='620px' height='870px' /><\/iframe>";
 
-              pdf.html(info).style("display", "inline");
+              pdf_frame.html(info);
+              pdf.style("display", "inline");
+              pdfClose.style("left", "638px");
               //pdf_bg.style("display", "inline");
             });
             d3.select("#doc-img-1").on("click", function() {
               var info =
-                "<embed class='pdf-container' src='" +
+                "<iframe class='pdf-container' src='" +
                 i.document1 +
-                "' width='770px' height='1090px' /><\/iframe>";
+                "' width='620px' height='870px' /><\/iframe>";
 
-              pdf.html(info).style("display", "inline");
+              pdf_frame.html(info);
+              pdf.style("display", "inline");
+              pdfClose.style("left", "638px");
+
               //pdf_bg.style("display", "inline");
             });
             d.selectAll("a.comment").on("click", function() {
@@ -3450,12 +3472,12 @@
         resize: function(n, t) {
           $(this).css("width", t.size.width + "px");
           d3.select("#popup-comment-textarea")
-            .style("width", t.size.width - 40 + "px")
-            .style("height", t.size.height - 35 + "px");
+            .style("width", t.size.width - 30 + "px")
+            .style("height", t.size.height - 30 + "px");
         }
       });
 
-       $('.pdf-popup').draggable({ iframeFix: true });
+      $(".pdf-popup").draggable({ iframeFix: true });
 
       $(".popup-comment > div").draggable({
         start: function() {
@@ -3512,8 +3534,8 @@
           w.style("left", 10 + "px");
           if (global_width < window.innerWidth - 190) {
             var topBarWidth = window.innerWidth - 190;
-            }
-          topBar.style("width", topBarWidth + "px")
+          }
+          topBar.style("width", topBarWidth + "px");
         } else {
           menuToggle = 1;
           d3.select("#menu-toggle")
@@ -3521,7 +3543,7 @@
             .style("left", "169px");
           l.style("width", "200px");
           w.style("left", u.left + "px");
-          topBar.style("width", (global_width + 190) + "px")
+          topBar.style("width", global_width + 190 + "px");
         }
       });
     });
