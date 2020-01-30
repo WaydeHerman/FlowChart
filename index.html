@@ -359,6 +359,7 @@
         right: 0px;
         left: auto;
         z-index: 1000;
+        display: inline-block;
       }
 
       #pdf-close-btn {
@@ -373,8 +374,13 @@
         border: 20px solid white;
       }
 
-      img {
+      .container > img {
         cursor: pointer;
+      }
+
+      .ui-resizable-handle {
+        bottom: 18px;
+        right: 12px;
       }
     </style>
   </head>
@@ -3477,7 +3483,23 @@
         }
       });
 
-      $(".pdf-popup").draggable({ iframeFix: true });
+      $(".pdf-popup").resizable({
+        handles: "e, s, se",
+        minHeight: 200,
+        minWidth: 130,
+        alsoResize: "iframe",
+        resize: function(n, t) {
+          $(this).css("width", t.size.width + "px");
+          pdfClose.style("left", t.size.width - 22 + "px");
+        }
+      });
+
+      $(".pdf-popup").draggable({
+        iframeFix: true,
+        start: function() {
+          $(".pdf-popup").css("right", "auto");
+        }
+      });
 
       $(".popup-comment > div").draggable({
         start: function() {
