@@ -3514,38 +3514,30 @@
       //
       function update_blinks() {
         d3.selectAll(".comment-circle").style("display", function(n) {
-          var t = "",
-            first = 1,
-            second = 1;
-
+          var t = "none";
           n.comment.forEach(function(v, i) {
-            if (v[n.popup[i]][0] == null || v[n.popup[i]][0] == "") {
-              first = 0;
-              if (n.id === "27691") {
-              }
+            if (v[n.popup[i]][0] != null && v[n.popup[i]][0] != "") {
+              t = "";
             }
-            if (v[n.popup[i]][1] == null || v[n.popup[i]][1] == "") {
-              second = 0;
-              if (n.id === "27691") {
-              }
-            }
-            if (first === 0 && second === 0) {
-              t = "none";
+            if (v[n.popup[i]][1] != null && v[n.popup[i]][1] != "") {
+              t = "";
             }
           });
+
           return t;
         });
 
         d3.selectAll(".comment-circle-back").style("display", function(n) {
-          var t = "";
+          var t = "none";
           n.comment.forEach(function(v, i) {
-            if (
-              (v[n.popup[i]][0] == null || v[n.popup[i]][0] == "") &&
-              (v[n.popup[i]][1] == null || v[n.popup[i]][1] == "")
-            ) {
-              t = "none";
+            if (v[n.popup[i]][0] != null && v[n.popup[i]][0] != "") {
+              t = "";
+            }
+            if (v[n.popup[i]][1] != null && v[n.popup[i]][1] != "") {
+              t = "";
             }
           });
+
           return t;
         });
       }
