@@ -2484,6 +2484,7 @@
         o.append("circle")
           .attr("class", "comment-circle-back")
           .datum(n)
+          .attr("id", n.id)
           .attr("cx", function() {
             if (n.test[0][0] == n.test[2][0]) {
               return n.test[0][0];
@@ -3513,12 +3514,22 @@
       //
       function update_blinks() {
         d3.selectAll(".comment-circle").style("display", function(n) {
-          var t = "";
+          var t = "",
+            first = 1,
+            second = 1;
+
           n.comment.forEach(function(v, i) {
-            if (
-              (v[n.popup[i]][0] == null || v[n.popup[i]][0] == "") &&
-              (v[n.popup[i]][1] == null || v[n.popup[i]][1] == "")
-            ) {
+            if (v[n.popup[i]][0] == null || v[n.popup[i]][0] == "") {
+              first = 0;
+              if (n.id === "27691") {
+              }
+            }
+            if (v[n.popup[i]][1] == null || v[n.popup[i]][1] == "") {
+              second = 0;
+              if (n.id === "27691") {
+              }
+            }
+            if (first === 0 && second === 0) {
               t = "none";
             }
           });
