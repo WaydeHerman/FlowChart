@@ -10,6 +10,10 @@
       integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
       crossorigin="anonymous"
     ></script>
+    <script
+      src="https://kit.fontawesome.com/ea2379d57d.js"
+      crossorigin="anonymous"
+    ></script>
     <link href="jquery-ui.min.css" rel="stylesheet" type="text/css" />
     <style type="text/css">
       @import url("https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap");
@@ -240,8 +244,8 @@
 
       .buttons {
         position: fixed;
-        top: 114px;
-        left: 40px;
+        top: 104px;
+        left: 30px;
         width: 138px;
         z-index: 10;
       }
@@ -264,8 +268,8 @@
 
       .top-bar {
         position: absolute;
-        top: 10px;
-        left: 9px;
+        top: 0px;
+        left: 0px;
       }
 
       .menu {
@@ -391,6 +395,19 @@
 
       .comment-circle {
         animation: blinker 1s linear infinite;
+      }
+
+      .nav-tabs {
+        border-bottom: none;
+      }
+
+      #close-btn-1,
+      #close-btn-0 {
+        font-size: 10px;
+      }
+
+      .comment-circle {
+        cursor: pointer;
       }
 
       @keyframes blinker {
@@ -2045,7 +2062,7 @@
 
       */
       var container = d3.select("#container"),
-        u = { top: 40, left: 190, right: 20, bottom: 40 },
+        u = { top: 30, left: 190, right: 20, bottom: 40 },
         et = d3.sum(t, function(n) {
           return n.leftPad + n.sub * n.subWidth * (n.items.length > 0 ? 1 : 0);
         }),
@@ -2189,22 +2206,27 @@
                 .attr("dy", "0.32em")
                 .text(m.name);
             } else {
-              st += 10;
+              //st += 10;
               m.y += 5;
-              l.attr("y", m.y - 20).attr("height", 40);
-              a = m.name.substr(0, 35).lastIndexOf(" ");
+              l.attr("y", m.y - 22).attr("height", 30);
+              console.log("m.name", m.name);
+              a = m.name.substr(0, 30).lastIndexOf(" ");
               y = m.name.substr(a + 1);
+              if (y.length > 1) {
+                e = m.name.substr(0, 30) + "...";
+              } else {
+                e = m.name.substr(0, a);
+              }
+
+              console.log("a", a);
+              console.log("y", y);
 
               r.append("text")
                 .attr("class", "btext box-3")
                 .datum(m)
                 .attr("x", m.x - 100)
                 .attr("y", m.y - 3)
-                .text(m.name.substr(0, a))
-                .append("tspan")
-                .attr("x", m.x - 100)
-                .attr("dy", "1.2em")
-                .text(y);
+                .text(e);
             }
           } else {
             if (m.mainCol == 3) {
@@ -2329,6 +2351,8 @@
                   pdf_frame.html(info);
                   pdf.style("display", "inline");
                   pdfClose.style("left", "638px");
+                  d3.select(".popup").style("right", "620px");
+
                   //pdf_bg.style("display", "inline");
                 });
             }
@@ -2490,24 +2514,24 @@
               return n.test[0][0];
             } else {
               if (n.test[0][0] > n.test[2][0]) {
-                return n.test[0][0] - 7;
+                return n.test[0][0] - 5.5;
               } else {
-                return n.test[0][0] + 7;
+                return n.test[0][0] + 5.5;
               }
             }
           })
           .attr("cy", function() {
             if (n.test[0][0] == n.test[2][0]) {
               if (n.test[0][1] > n.test[2][1]) {
-                return n.test[0][1] - 7;
+                return n.test[0][1] - 5.5;
               } else {
-                return n.test[0][1] + 7;
+                return n.test[0][1] + 5.5;
               }
             } else {
               return n.test[0][1];
             }
           })
-          .attr("r", 5)
+          .attr("r", 4)
           .style("display", function(n) {
             var t = "";
             n.comment.forEach(function(v, i) {
@@ -2531,24 +2555,24 @@
               return n.test[0][0];
             } else {
               if (n.test[0][0] > n.test[2][0]) {
-                return n.test[0][0] - 7;
+                return n.test[0][0] - 5.5;
               } else {
-                return n.test[0][0] + 7;
+                return n.test[0][0] + 5.5;
               }
             }
           })
           .attr("cy", function() {
             if (n.test[0][0] == n.test[2][0]) {
               if (n.test[0][1] > n.test[2][1]) {
-                return n.test[0][1] - 7;
+                return n.test[0][1] - 5.5;
               } else {
-                return n.test[0][1] + 7;
+                return n.test[0][1] + 5.5;
               }
             } else {
               return n.test[0][1];
             }
           })
-          .attr("r", 5)
+          .attr("r", 4)
           .style("display", function(n) {
             var t = "";
             n.comment.forEach(function(v, i) {
@@ -2561,9 +2585,26 @@
             });
             return t;
           })
-          .style("stroke-width", "3px")
+          .style("stroke-width", "2px")
           .style("fill", "white")
-          .style("stroke", n.color);
+          .style("stroke", n.color)
+          .on("click", function(n) {
+            if (n.comment[0][n.popup[0]][0] != "") {
+              document.getElementById("popup-comment-textarea").value =
+                n.comment[0][n.popup[0]][0];
+              a.style("display", "inline")
+                .attr("data-id", n.id)
+                .attr("data-idx", 0);
+            } else {
+              if (n.comment[0][n.popup[0]][1] != "") {
+                document.getElementById("popup-comment-textarea").value =
+                  n.comment[0][n.popup[0]][1];
+                a.style("display", "inline")
+                  .attr("data-id", n.id)
+                  .attr("data-idx", 1);
+              }
+            }
+          });
       });
 
       listOfAssignmentNumber1.sort(function(a, b) {
@@ -2633,16 +2674,16 @@
         .style("position", "fixed")
         .style("z-index", 200);
 
-      topBar
+      /* topBar
         .append("div")
         .style("top", 10)
         .style("left", 10)
         .attr("width", global_width)
         .attr("id", "top-bar-line")
         .style("border-top", "1px solid #CCCCCC")
-        .style("z-index", 300);
+        .style("z-index", 300); */
 
-      topBar
+      /* topBar
         .append("div")
         .style("top", "0px")
         .style("left", 10)
@@ -2651,9 +2692,9 @@
         .style("height", "10px")
         .style("background-color", "white")
         .style("position", "fixed")
-        .style("z-index", 200);
+        .style("z-index", 200); */
 
-      topBar
+      /* topBar
         .append("div")
         .style("top", "10px")
         .style("left", "10px")
@@ -2661,9 +2702,9 @@
         .attr("id", "top-bar-line-2")
         .style("border-left", "1px solid #CCCCCC")
         .style("position", "fixed")
-        .style("z-index", 400);
+        .style("z-index", 400); */
 
-      topBar
+      /* topBar
         .append("div")
         .style("top", "0px")
         .style("left", "0px")
@@ -2672,7 +2713,7 @@
         .attr("id", "top-bar-line-3")
         .style("position", "fixed")
         .style("background-color", "white")
-        .style("z-index", 300);
+        .style("z-index", 300); */
 
       menu_contents = l
         .append("div")
@@ -2680,27 +2721,17 @@
         .attr("id", "menu-contents")
         .style("width", "180px")
         .style("height", global_height - 40 + "px")
-        .style("top", "50px")
-        .style("left", "9px");
-
-      l.append("div")
         .style("top", "40px")
-        .style("left", "10px")
+        .style("left", "0px");
+
+      /* l.append("div")
+        .style("top", "40px")
+        .style("left", "0px")
         .style("height", global_height - 40 + "px")
         .attr("id", "menu-bar-line")
         .style("position", "fixed")
         .style("border-left", "1px solid #CCCCCC")
-        .style("z-index", 300);
-
-      l.append("div")
-        .style("top", "0px")
-        .style("left", "0px")
-        .style("height", global_height - 40 + "px")
-        .style("width", "10px")
-        .attr("id", "menu-bar-bar")
-        .style("background-color", "white")
-        .style("position", "fixed")
-        .style("z-index", 100);
+        .style("z-index", 300); */
 
       var menu_logo = menu_contents
         .append("div")
@@ -2745,7 +2776,7 @@
         .append("div")
         .attr("class", "menu-legend")
         .style("top", "495px")
-        .style("left", "10px")
+        .style("left", "0px")
         .style("position", "absolute");
 
       menu_contents
@@ -3129,12 +3160,12 @@
 
       l.append("span")
         .attr("id", "menu-toggle")
-        .style("font-size", "14px")
-        .attr("class", "ui-icon ui-icon-close")
+        .style("font-size", "10px")
+        .attr("class", "fas fa-times")
         .style("cursor", "pointer")
         .style("position", "fixed")
-        .style("top", "48px")
-        .style("left", "169px")
+        .style("top", "6px")
+        .style("left", "10px")
         .style("z-index", "1000");
 
       /*var textVar = "";
@@ -3185,10 +3216,10 @@
       pdfClose = pdf
         .append("span")
         .attr("id", "pdf-close-btn")
-        .style("font-size", "14px")
-        .style("top", "20px")
+        .style("font-size", "10px")
+        .style("top", "12px")
         .style("right", "4px")
-        .attr("class", "ui-icon ui-icon-close")
+        .attr("class", "fas fa-times")
         .style("cursor", "pointer")
         .style("z-index", "1000");
 
@@ -3307,7 +3338,7 @@
             t +=
               "<div class='popup-div' data-id='" +
               u +
-              "'><span class='close ui-icon ui-icon-close' id='close-btn-" +
+              "'><span class='close fas fa-times' id='close-btn-" +
               u +
               "' ><\/span>";
             t +=
@@ -3431,6 +3462,7 @@
               pdf_frame.html(info);
               pdf.style("display", "inline");
               pdfClose.style("left", "638px");
+              d3.select(".popup").style("right", "620px");
               //pdf_bg.style("display", "inline");
             });
             d3.select("#doc-img-1").on("click", function() {
@@ -3442,6 +3474,7 @@
               pdf_frame.html(info);
               pdf.style("display", "inline");
               pdfClose.style("left", "638px");
+              d3.select(".popup").style("right", "620px");
 
               //pdf_bg.style("display", "inline");
             });
@@ -3790,7 +3823,7 @@
               ) {
                 varIndex = 0;
               } else {
-                varIndex = +$(".popup-comment").attr("data-idx");
+                varIndex = 1;
               }
 
               if (
@@ -3825,6 +3858,7 @@
       });
       d3.select("#pdf-close-btn").on("click", function() {
         pdf.style("display", "none");
+        d3.select(".popup").style("right", "0px");
         //pdf_bg.style("display", "none");
       });
       var menuToggle = 1;
@@ -3833,22 +3867,22 @@
         if (menuToggle === 1) {
           menuToggle = 0;
           d3.select("#menu-toggle")
-            .attr("class", "ui-icon ui-icon-triangle-1-e")
-            .style("left", "14px");
+            .attr("class", "fas fa-chevron-right")
+            .style("left", "10px");
           l.style("width", "10px");
-          w.style("left", 10 + "px");
+          w.style("left", 10 + "px").style("top", 0 + "px");
           if (global_width < window.innerWidth - 190) {
             var topBarWidth = window.innerWidth - 190;
           }
-          topBar.style("width", topBarWidth + "px");
+          topBar.style("width", topBarWidth + "px").style("display", "none");
         } else {
           menuToggle = 1;
           d3.select("#menu-toggle")
-            .attr("class", "ui-icon ui-icon-close")
-            .style("left", "169px");
+            .attr("class", "fas fa-times")
+            .style("left", "10px");
           l.style("width", "200px");
-          w.style("left", u.left + "px");
-          topBar.style("width", global_width + 190 + "px");
+          w.style("left", u.left + "px").style("top", u.top + "px");
+          topBar.style("width", global_width + 190 + "px").style("display", "");
         }
       });
       //blink();
