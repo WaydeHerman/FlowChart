@@ -415,6 +415,11 @@
           fill-opacity: 0;
         }
       }
+
+      .connection-test {
+        stroke-width: 3px;
+        fill: none;
+      }
     </style>
   </head>
 
@@ -2401,6 +2406,228 @@
       LINES DEFINITION:
 
       */
+      function unique_date(arr) {
+        results = [];
+        arr.forEach(function(v) {
+          if (results.indexOf(v[2]) < 0) {
+            results.push(v[2]);
+          }
+        });
+        return results;
+      }
+
+      data.connection.forEach(function(n) {
+        t = hList[n.start_id];
+        i = hList[n.end_id];
+
+        /*if (n.type === "Release" && n.ref_id != "") {
+        } else {
+          if (i.connects) {
+            i.connects.push([t.x, t.y, n.date]);
+          } else {
+            i.connects = [[t.x, t.y, n.date]];
+          }
+          if (t.connects) {
+            t.connects.push([i.x, i.y, n.date]);
+          } else {
+            t.connects = [[i.x, i.y, n.date]];
+          }
+        }*/
+        if (n.type === "Release" && n.ref_id != "") {
+        } else {
+          if (i.x > t.x) {
+            if (i.connectLeft) {
+              i.connectLeft.push([t.x, t.y, n.date, n.type, t.name]);
+            } else {
+              i.connectLeft = [[t.x, t.y, n.date, n.type, t.name]];
+            }
+            if (t.connectRight) {
+              t.connectRight.push([i.x, i.y, n.date, n.type, i.name]);
+            } else {
+              t.connectRight = [[i.x, i.y, n.date, n.type, i.name]];
+            }
+          } else {
+            if (i.x < t.x) {
+              if (i.connectRight) {
+                i.connectRight.push([t.x, t.y, n.date, n.type, t.name]);
+              } else {
+                i.connectRight = [[t.x, t.y, n.date, n.type, t.name]];
+              }
+              if (t.connectLeft) {
+                t.connectLeft.push([i.x, i.y, n.date, n.type, i.name]);
+              } else {
+                t.connectLeft = [[i.x, i.y, n.date, n.type, i.name]];
+              }
+            } else {
+              // vertical connections?
+            }
+          }
+        }
+        //console.log("n", n);
+        //console.log("t", t);
+        //console.log("i", i);
+      });
+
+      function uniq(arr) {
+        var u = {},
+          a = [];
+        for (var i = 0, l = arr.length; i < l; ++i) {
+          if (!u.hasOwnProperty(arr[i])) {
+            a.push(arr[i]);
+            u[arr[i]] = 1;
+          }
+        }
+        return a;
+      }
+
+      // first investigate different types of lines beyond security, release
+      // write a thing to assign number (0-6) by date.
+      var conns = ["connectLeft", "connectRight"];
+      hList.forEach(function(d) {
+        conns.forEach(function(v) {
+          if (d[v]) {
+            d[v + "_short"] = unique_date(d[v]);
+
+            //console.log(d[v + "_short"] );
+            var connList = [];
+            var connIndex = -1;
+            /*
+            d[v].forEach(function(w) {
+              if (connList.indexOf(w[2]) < 0) {
+                connList.push(w[2]);
+                if (connIndex < 6) {
+                  connIndex++;
+                }
+                w.push(connIndex);
+              } else {
+                connList.forEach(function(u, i) {
+                  if (w[2] === u) {
+                    w.push(i);
+                  }
+                });
+              }
+            }); */
+          }
+        });
+
+        //
+      });
+
+      // check how many.
+      // if 5 or less, then 1 is at the '2 slot', otherwise at the '1 slot'.
+      data.connection.forEach(function(n) {
+        t = hList[n.start_id];
+        i = hList[n.end_id];
+        e = [];
+        if (n.type === "Release" && n.ref_id != "") {
+          console.log(n);
+          data.connection.forEach(function(v) {
+            if (n.ref_id === v.id) {
+              e = v.test2;
+            }
+          });
+        } else {
+          if (t.x === i.x) {
+            (u = [t.x, t.y + 36]),
+              e.push(u),
+              (u = [t.x, t.y + 56]),
+              e.push(u),
+              (u = [t.x, i.y - 56]),
+              e.push(u),
+              (u = [t.x, i.y - 36]),
+              e.push(u);
+          }
+
+          // need to check left box type
+          // need to draw the line
+          // need to find out the dy for slots for diff box types
+          if (t.x > i.x) {
+            var maxSlotLeft = t.connectLeft_short.length;
+            var maxSlotRight = i.connectRight_short.length;
+
+            t.connectLeft_short.forEach(function(v, i) {
+              if (n.date === v) {
+                tmp_slot = i;
+
+                if (tmp_slot >= 6) {
+                  tmp_slot = 6;
+                }
+                if (maxSlotLeft <= 5) {
+                  slotLeft = tmp_slot + 1;
+                } else {
+                  slotLeft = tmp_slot;
+                }
+              }
+            });
+
+            i.connectRight_short.forEach(function(v, i) {
+              if (n.date === v) {
+                tmp_slot = i;
+                if (tmp_slot >= 6) {
+                  tmp_slot = 6;
+                }
+                if (maxSlotRight <= 5) {
+                  slotRight = tmp_slot + 1;
+                } else {
+                  slotRight = tmp_slot;
+                }
+              }
+            });
+
+            if (t.mainCol === 3 && t.recorded_date === "") {
+              margin = [110, 160, 10, 5];
+            } else {
+              margin = [95, 145, 30, 10];
+            }
+            e.push([t.x - margin[0], t.y - margin[2] + slotLeft * margin[3]]);
+            e.push([t.x - margin[1], t.y - margin[2] + slotLeft * margin[3]]);
+            e.push([i.x + 145, i.y - margin[2] + slotRight * margin[3]]);
+            e.push([i.x + 95, i.y - margin[2] + slotRight * margin[3]]);
+          }
+          if (t.x < i.x) {
+            var maxSlotLeft = i.connectLeft_short.length;
+            var maxSlotRight = t.connectRight_short.length;
+            i.connectLeft_short.forEach(function(v, i) {
+              if (n.date === v) {
+                tmp_slot = i;
+                if (tmp_slot >= 6) {
+                  tmp_slot = 6;
+                }
+                if (maxSlotLeft <= 5) {
+                  slotLeft = tmp_slot + 1;
+                } else {
+                  slotLeft = tmp_slot;
+                }
+              }
+            });
+            t.connectRight_short.forEach(function(v, i) {
+              if (n.date === v) {
+                tmp_slot = i;
+                if (tmp_slot >= 6) {
+                  tmp_slot = 6;
+                }
+                if (maxSlotRight <= 5) {
+                  slotRight = tmp_slot + 1;
+                } else {
+                  slotRight = tmp_slot;
+                }
+              }
+            });
+
+            if (i.mainCol === 3 && i.recorded_date === "") {
+              margin = [110, 160, 10, 5];
+            } else {
+              margin = [95, 145, 30, 10];
+            }
+            e.push([t.x + 95, t.y - margin[2] + slotRight * margin[3]]);
+            e.push([t.x + 145, t.y - margin[2] + slotRight * margin[3]]);
+            e.push([i.x - margin[1], i.y - margin[2] + slotLeft * margin[3]]);
+            e.push([i.x - margin[0], i.y - margin[2] + slotLeft * margin[3]]);
+          }
+        }
+
+        n.test2 = e;
+      });
 
       it = 0;
       var listOfAssignmentNumber1 = [];
@@ -2443,6 +2670,9 @@
           e.push(u);
 
           n.test = e;
+          //console.log(n);
+          //console.log("i", i);
+          //console.log("t", t);
 
           if (f.indexOf(n.date) < 0) {
             f.push(n.date);
@@ -2476,7 +2706,7 @@
           });
         }
 
-        a = o
+        /* a = o
           .append("g")
           .datum(n)
           .append("path")
@@ -2484,7 +2714,19 @@
           //.attr("id", n.id)
           .datum(n.test)
           .attr("d", ht)
-          .style("opacity", 1)
+          .style("opacity", 0) ///// <<<<<<< HERE
+          //.attr("marker-end", "url(#end" + colorOptions.indexOf(n.color) + ")")
+          .style("stroke", n.color); */
+
+        a = o
+          .append("g")
+          .datum(n)
+          .append("path")
+          .attr("class", "connection")
+          //.attr("id", n.id)
+          .datum(n.test2)
+          .attr("d", ht)
+          .style("opacity", 1) ///// <<<<<<< HERE
           .attr("marker-end", "url(#end" + colorOptions.indexOf(n.color) + ")")
           .style("stroke", n.color);
 
