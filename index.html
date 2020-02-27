@@ -284,7 +284,7 @@
         left: 100px;
         width: 50px;
         z-index: 10;
-        background: #fafafa;
+        background: #fff;
       }
 
       .popup-comment {
@@ -311,6 +311,7 @@
         padding: 10px;
         font-family: "Roboto", sans-serif;
         line-height: 1.15;
+        pointer-events: none;
       }
 
       .popup-comment a {
@@ -429,10 +430,7 @@
 
   <script>
     // Need to change these for the toolbar images.
-    var filePath1 =
-      "https://gist.githubusercontent.com/WaydeHerman/0f545ecfef7761ec51d3e2bcbb8303a2/raw/aae8e4adf3adbc1462d36f24179d9694d9ef83ab/Chase-Bank-Logos-cut.png";
-    var filePath2 =
-      "https://gist.githubusercontent.com/WaydeHerman/0f545ecfef7761ec51d3e2bcbb8303a2/raw/aae8e4adf3adbc1462d36f24179d9694d9ef83ab/0.jpeg";
+
     /*
 
       Functions:
@@ -487,6 +485,9 @@
       */
     d3.json("6550797.json").then(function(data) {
       data.comment = "";
+
+      var filePath1 = data.general.logo_1;
+      var filePath2 = data.general.logo_2;
       /* data.connection.forEach(function(v) {
         if (
           v.start_id != null ||
@@ -2079,6 +2080,7 @@
       if (global_height < window.innerHeight) {
         global_height = window.innerHeight + 20;
       }
+      global_height -= 80;
       global_width = et + 40 + u.right;
       if (global_width < window.innerWidth - 190) {
         global_width = window.innerWidth - 190;
@@ -2520,7 +2522,7 @@
         i = hList[n.end_id];
         e = [];
         if (n.type === "Release" && n.ref_id != "") {
-          console.log(n);
+          //console.log(n);
           data.connection.forEach(function(v) {
             if (n.ref_id === v.id) {
               e = v.test2;
@@ -2579,10 +2581,13 @@
             } else {
               margin = [95, 145, 30, 10];
             }
+            if (i.mainCol === 3 && i.recorded_date === "") {
+              console.log(i);
+            }
             e.push([t.x - margin[0], t.y - margin[2] + slotLeft * margin[3]]);
             e.push([t.x - margin[1], t.y - margin[2] + slotLeft * margin[3]]);
-            e.push([i.x + 145, i.y - margin[2] + slotRight * margin[3]]);
-            e.push([i.x + 95, i.y - margin[2] + slotRight * margin[3]]);
+            e.push([i.x + 145, i.y - 30 + slotRight * 10]);
+            e.push([i.x + 95, i.y - 30 + slotRight * 10]);
           }
           if (t.x < i.x) {
             var maxSlotLeft = i.connectLeft_short.length;
@@ -2619,8 +2624,8 @@
             } else {
               margin = [95, 145, 30, 10];
             }
-            e.push([t.x + 95, t.y - margin[2] + slotRight * margin[3]]);
-            e.push([t.x + 145, t.y - margin[2] + slotRight * margin[3]]);
+            e.push([t.x + 95, t.y - 30 + slotRight * 10]);
+            e.push([t.x + 145, t.y - 30 + slotRight * 10]);
             e.push([i.x - margin[1], i.y - margin[2] + slotLeft * margin[3]]);
             e.push([i.x - margin[0], i.y - margin[2] + slotLeft * margin[3]]);
           }
@@ -2912,7 +2917,7 @@
         .attr("class", "top-bar")
         .style("width", global_width + 190 + "px")
         .style("height", "40px")
-        .style("background-color", "#FAFAFA")
+        .style("background-color", "#fff")
         .style("position", "fixed")
         .style("z-index", 200);
 
@@ -2990,11 +2995,11 @@
 
       menu_logo
         .append("img")
-        .attr("width", 78)
-        .attr("height", "auto")
+        .attr("width", 40)
+        .attr("height", 40)
         .style("padding-bottom", "2px")
-        .style("padding-top", "14px")
-        .style("padding-left", "7px")
+        .style("padding-top", "5px")
+        .style("padding-left", "5px")
         .attr("src", filePath1);
 
       menu_logo
@@ -3004,6 +3009,7 @@
         .style("padding", "4px")
         .style("margin-top", "4px")
         .style("margin-left", "5px")
+        .style("float", "right")
         .attr("src", filePath2);
 
       /* imgSVG
@@ -3468,7 +3474,7 @@
       pdf_frame = pdf.append("div").attr("class", "pdf-frame");
 
       a.html(
-        "<div id='popup-comment-container'><span class='ui-icon ui-icon-close' id='close-btn'></span><textarea id='popup-comment-textarea'><\/textarea><\/div>"
+        "<div id='popup-comment-container'><span class='ui-icon ui-icon-close' id='close-btn'></span><textarea id='popup-comment-textarea' readonly></textarea></div>"
       );
       d3.select("#popup-comment-textarea").style("width", "370px");
 
