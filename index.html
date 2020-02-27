@@ -2521,6 +2521,7 @@
         t = hList[n.start_id];
         i = hList[n.end_id];
         e = [];
+        if (t != null && i != null) {
         if (n.type === "Release" && n.ref_id != "") {
           //console.log(n);
           data.connection.forEach(function(v) {
@@ -2627,6 +2628,8 @@
             e.push([i.x - margin[0], i.y - margin[2] + slotLeft * margin[3]]);
           }
         }
+        }
+        
 
         n.test2 = e;
       });
@@ -2703,7 +2706,6 @@
                 n.test[1] = v.test[2];
                 n.test[2] = v.test[1];
                 n.test[3] = v.test[0];
-                console.log('test')
                 n.test2[0] = v.test2[3];
                 n.test2[1] = v.test2[2];
                 n.test2[2] = v.test2[1];
