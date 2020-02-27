@@ -2525,7 +2525,7 @@
           //console.log(n);
           data.connection.forEach(function(v) {
             if (n.ref_id === v.id) {
-              e = v.test2;
+              //e = v.test2;
             }
           });
         } else {
@@ -2580,9 +2580,6 @@
               margin = [110, 160, 10, 5];
             } else {
               margin = [95, 145, 30, 10];
-            }
-            if (i.mainCol === 3 && i.recorded_date === "") {
-              console.log(i);
             }
             e.push([t.x - margin[0], t.y - margin[2] + slotLeft * margin[3]]);
             e.push([t.x - margin[1], t.y - margin[2] + slotLeft * margin[3]]);
@@ -2706,6 +2703,11 @@
                 n.test[1] = v.test[2];
                 n.test[2] = v.test[1];
                 n.test[3] = v.test[0];
+                console.log('test')
+                n.test2[0] = v.test2[3];
+                n.test2[1] = v.test2[2];
+                n.test2[2] = v.test2[1];
+                n.test2[3] = v.test2[0];
               }
             }
           });
