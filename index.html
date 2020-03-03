@@ -362,6 +362,10 @@
         left: auto;
         cursor: pointer;
       }
+
+      .pdf-frame {
+        cursor: move;
+      }
       .pdf-frame > iframe {
         border: 20px solid white;
       }
@@ -2089,8 +2093,8 @@
         .append("svg")
         .attr("width", global_width)
         .attr("height", global_height)
-        .style("left", u.left + "px")
-        .style("top", u.top + "px")),
+        .style("left", "10px")
+        .style("top", "0px")),
         (wt = w.append("defs")),
         (ot = w.append("g")),
         (o = w.append("g")),
@@ -2913,17 +2917,21 @@
       l = container
         .append("div")
         .attr("class", "menu")
-        .style("width", "200px")
+        .style("width", "10px")
         .style("height", global_height + "px");
+          if (global_width < window.innerWidth - 190) {
+            var topBarWidth = window.innerWidth - 190;
+          }
 
       topBar = container
         .append("div")
         .attr("class", "top-bar")
-        .style("width", global_width + 190 + "px")
+        .style("width", topBarWidth + "px")
         .style("height", "40px")
         .style("background-color", "#fff")
         .style("position", "fixed")
-        .style("z-index", 200);
+        .style("z-index", 200)
+        .style("display", "none")
 
       /* topBar
         .append("div")
@@ -3413,7 +3421,7 @@
       l.append("span")
         .attr("id", "menu-toggle")
         .style("font-size", "10px")
-        .attr("class", "fas fa-times")
+        .attr("class", "fas fa-chevron-right")
         .style("cursor", "pointer")
         .style("position", "fixed")
         .style("top", "6px")
@@ -4113,7 +4121,8 @@
         d3.select(".popup").style("right", "0px");
         //pdf_bg.style("display", "none");
       });
-      var menuToggle = 1;
+      var menuToggle = 0;
+      $("#menu-contents").toggle();
       $("#menu-toggle").click(function() {
         $("#menu-contents").toggle();
         if (menuToggle === 1) {
@@ -4133,10 +4142,68 @@
             .attr("class", "fas fa-times")
             .style("left", "10px");
           l.style("width", "200px");
-          w.style("left", u.left + "px").style("top", u.top + "px");
+          w.style("left", (180) + "px").style("top", (40) + "px");
           topBar.style("width", global_width + 190 + "px").style("display", "");
+
         }
       });
+          var shift_click = false;
+        d3.select("body").on("keydown", function() {
+
+          if (d3.event.keyCode === 16) {
+            // SHIFT
+            shift_click = true
+          }
+          if (d3.event.keyCode === 37) {
+            // LEFT
+            left_click = true
+            if (shift_click === true) {
+              if (idIndex >= 0) {
+                idIndex--;
+                stepID();
+              }
+            } else {
+              if (assignmentIndex >= 0) {
+                assignmentIndex--;
+                stepAssignment();
+              }
+            }
+          }
+          if (d3.event.keyCode === 39) {
+            // RIGHT
+            right_click = true
+            if (shift_click === true) {
+              if (idIndex < listOfID.length - 1) {
+                idIndex++;
+                stepID();
+              }
+            } else {
+              if (assignmentIndex < listOfAssignmentNumber1.length) {
+                assignmentIndex++;
+                stepAssignment();
+              }
+            }
+          }
+          if (d3.event.keyCode === 38) {
+            idIndex = -1;
+            assignmentIndex = -1;
+            stepID();
+          }
+          if (d3.event.keyCode === 40) {
+            idIndex = listOfID.length - 1;
+            assignmentIndex = listOfAssignmentNumber1.length - 1;
+            stepID();
+          }
+          if (shift_click === true && left_click === true)  {
+            console.log('shift + left')
+          }
+        })
+        .on("keyup", function() {
+          if (d3.event.keyCode === 16) {
+            // SHIFT
+            shift_click = false;
+          }
+        })
       //blink();
     });
   </script>
