@@ -15,6 +15,7 @@
       crossorigin="anonymous"
     ></script>
     <link href="jquery-ui.min.css" rel="stylesheet" type="text/css" />
+    <script src="hotkeys.min.js"></script>
     <style type="text/css">
       @import url("https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap");
 
@@ -1833,8 +1834,6 @@
         });
       }
 
-      console.log(data);
-
       colorOptions = d3
         .map(data.connection, function(n) {
           return n.color;
@@ -2220,7 +2219,6 @@
               //st += 10;
               m.y += 5;
               l.attr("y", m.y - 22).attr("height", 30);
-              console.log("m.name", m.name);
               a = m.name.substr(0, 30).lastIndexOf(" ");
               y = m.name.substr(a + 1);
               if (y.length > 1) {
@@ -2228,9 +2226,6 @@
               } else {
                 e = m.name.substr(0, a);
               }
-
-              console.log("a", a);
-              console.log("y", y);
 
               r.append("text")
                 .attr("class", "btext box-3")
@@ -2526,114 +2521,113 @@
         i = hList[n.end_id];
         e = [];
         if (t != null && i != null) {
-        if (n.type === "Release" && n.ref_id != "") {
-          //console.log(n);
-          data.connection.forEach(function(v) {
-            if (n.ref_id === v.id) {
-              //e = v.test2;
+          if (n.type === "Release" && n.ref_id != "") {
+            //console.log(n);
+            data.connection.forEach(function(v) {
+              if (n.ref_id === v.id) {
+                //e = v.test2;
+              }
+            });
+          } else {
+            if (t.x === i.x) {
+              (u = [t.x, t.y + 36]),
+                e.push(u),
+                (u = [t.x, t.y + 56]),
+                e.push(u),
+                (u = [t.x, i.y - 56]),
+                e.push(u),
+                (u = [t.x, i.y - 36]),
+                e.push(u);
             }
-          });
-        } else {
-          if (t.x === i.x) {
-            (u = [t.x, t.y + 36]),
-              e.push(u),
-              (u = [t.x, t.y + 56]),
-              e.push(u),
-              (u = [t.x, i.y - 56]),
-              e.push(u),
-              (u = [t.x, i.y - 36]),
-              e.push(u);
-          }
 
-          // need to check left box type
-          // need to draw the line
-          // need to find out the dy for slots for diff box types
-          if (t.x > i.x) {
-            var maxSlotLeft = t.connectLeft_short.length;
-            var maxSlotRight = i.connectRight_short.length;
+            // need to check left box type
+            // need to draw the line
+            // need to find out the dy for slots for diff box types
+            if (t.x > i.x) {
+              var maxSlotLeft = t.connectLeft_short.length;
+              var maxSlotRight = i.connectRight_short.length;
 
-            t.connectLeft_short.forEach(function(v, i) {
-              if (n.date === v) {
-                tmp_slot = i;
+              t.connectLeft_short.forEach(function(v, i) {
+                if (n.date === v) {
+                  tmp_slot = i;
 
-                if (tmp_slot >= 6) {
-                  tmp_slot = 6;
+                  if (tmp_slot >= 6) {
+                    tmp_slot = 6;
+                  }
+                  if (maxSlotLeft <= 5) {
+                    slotLeft = tmp_slot + 1;
+                  } else {
+                    slotLeft = tmp_slot;
+                  }
                 }
-                if (maxSlotLeft <= 5) {
-                  slotLeft = tmp_slot + 1;
-                } else {
-                  slotLeft = tmp_slot;
+              });
+
+              i.connectRight_short.forEach(function(v, i) {
+                if (n.date === v) {
+                  tmp_slot = i;
+                  if (tmp_slot >= 6) {
+                    tmp_slot = 6;
+                  }
+                  if (maxSlotRight <= 5) {
+                    slotRight = tmp_slot + 1;
+                  } else {
+                    slotRight = tmp_slot;
+                  }
                 }
+              });
+
+              if (t.mainCol === 3 && t.recorded_date === "") {
+                margin = [110, 160, 10, 5];
+              } else {
+                margin = [95, 145, 30, 10];
               }
-            });
-
-            i.connectRight_short.forEach(function(v, i) {
-              if (n.date === v) {
-                tmp_slot = i;
-                if (tmp_slot >= 6) {
-                  tmp_slot = 6;
-                }
-                if (maxSlotRight <= 5) {
-                  slotRight = tmp_slot + 1;
-                } else {
-                  slotRight = tmp_slot;
-                }
-              }
-            });
-
-            if (t.mainCol === 3 && t.recorded_date === "") {
-              margin = [110, 160, 10, 5];
-            } else {
-              margin = [95, 145, 30, 10];
+              e.push([t.x - margin[0], t.y - margin[2] + slotLeft * margin[3]]);
+              e.push([t.x - margin[1], t.y - margin[2] + slotLeft * margin[3]]);
+              e.push([i.x + 145, i.y - 30 + slotRight * 10]);
+              e.push([i.x + 95, i.y - 30 + slotRight * 10]);
             }
-            e.push([t.x - margin[0], t.y - margin[2] + slotLeft * margin[3]]);
-            e.push([t.x - margin[1], t.y - margin[2] + slotLeft * margin[3]]);
-            e.push([i.x + 145, i.y - 30 + slotRight * 10]);
-            e.push([i.x + 95, i.y - 30 + slotRight * 10]);
-          }
-          if (t.x < i.x) {
-            var maxSlotLeft = i.connectLeft_short.length;
-            var maxSlotRight = t.connectRight_short.length;
-            i.connectLeft_short.forEach(function(v, i) {
-              if (n.date === v) {
-                tmp_slot = i;
-                if (tmp_slot >= 6) {
-                  tmp_slot = 6;
+            if (t.x < i.x) {
+              var maxSlotLeft = i.connectLeft_short.length;
+              var maxSlotRight = t.connectRight_short.length;
+              i.connectLeft_short.forEach(function(v, i) {
+                if (n.date === v) {
+                  tmp_slot = i;
+                  if (tmp_slot >= 6) {
+                    tmp_slot = 6;
+                  }
+                  if (maxSlotLeft <= 5) {
+                    slotLeft = tmp_slot + 1;
+                  } else {
+                    slotLeft = tmp_slot;
+                  }
                 }
-                if (maxSlotLeft <= 5) {
-                  slotLeft = tmp_slot + 1;
-                } else {
-                  slotLeft = tmp_slot;
+              });
+              t.connectRight_short.forEach(function(v, i) {
+                if (n.date === v) {
+                  tmp_slot = i;
+                  if (tmp_slot >= 6) {
+                    tmp_slot = 6;
+                  }
+                  if (maxSlotRight <= 5) {
+                    slotRight = tmp_slot + 1;
+                  } else {
+                    slotRight = tmp_slot;
+                  }
                 }
-              }
-            });
-            t.connectRight_short.forEach(function(v, i) {
-              if (n.date === v) {
-                tmp_slot = i;
-                if (tmp_slot >= 6) {
-                  tmp_slot = 6;
-                }
-                if (maxSlotRight <= 5) {
-                  slotRight = tmp_slot + 1;
-                } else {
-                  slotRight = tmp_slot;
-                }
-              }
-            });
+              });
 
-            if (i.mainCol === 3 && i.recorded_date === "") {
-              margin = [110, 160, 10, 5];
-            } else {
-              margin = [95, 145, 30, 10];
+              if (i.mainCol === 3 && i.recorded_date === "") {
+                margin = [110, 160, 10, 5];
+              } else {
+                margin = [95, 145, 30, 10];
+              }
+              e.push([t.x + 95, t.y - 30 + slotRight * 10]);
+              e.push([t.x + 145, t.y - 30 + slotRight * 10]);
+              e.push([i.x - margin[1], i.y - margin[2] + slotLeft * margin[3]]);
+              e.push([i.x - margin[0], i.y - margin[2] + slotLeft * margin[3]]);
             }
-            e.push([t.x + 95, t.y - 30 + slotRight * 10]);
-            e.push([t.x + 145, t.y - 30 + slotRight * 10]);
-            e.push([i.x - margin[1], i.y - margin[2] + slotLeft * margin[3]]);
-            e.push([i.x - margin[0], i.y - margin[2] + slotLeft * margin[3]]);
           }
         }
-        }
-        
 
         n.test2 = e;
       });
@@ -2886,8 +2880,6 @@
       );
       var boxElementWithContent = d3.selectAll(".box, .box *");
 
-      console.log(boxMenuElementWithContent);
-
       function equalToEventTarget() {
         return this == d3.event.target;
       }
@@ -2919,9 +2911,9 @@
         .attr("class", "menu")
         .style("width", "10px")
         .style("height", global_height + "px");
-          if (global_width < window.innerWidth - 190) {
-            var topBarWidth = window.innerWidth - 190;
-          }
+      if (global_width < window.innerWidth - 190) {
+        var topBarWidth = window.innerWidth - 190;
+      }
 
       topBar = container
         .append("div")
@@ -2931,7 +2923,7 @@
         .style("background-color", "#fff")
         .style("position", "fixed")
         .style("z-index", 200)
-        .style("display", "none")
+        .style("display", "none");
 
       /* topBar
         .append("div")
@@ -3274,6 +3266,7 @@
       ttB
         .append("button")
         .text("<<")
+        .attr("id", "step-first")
         .attr("class", "ui-button ui-widget ui-corner-all custom-button")
         .on("click", function() {
           if (assignmentIndex >= 0) {
@@ -3289,6 +3282,7 @@
       ttB
         .append("button")
         .text(">>")
+        .attr("id", "step-last")
         .attr("class", "ui-button ui-widget ui-corner-all custom-button")
         .on("click", function() {
           if (assignmentIndex < listOfAssignmentNumber1.length) {
@@ -3365,10 +3359,17 @@
           sliderFunction();
         }
       });
-      sval3 = 1;
+          // initial zoom:
+          console.log('global_width', global_width)
+          console.log('window.innerWidth', window.innerWidth)
+          console.log('req_scale', global_width/window.innerWidth)
+          initZoom = window.innerWidth/global_width
+          sval3 = initZoom
+          console.log('initZoom', initZoom)
+      //sval3 = 1;
       $("#slider3").slider({
         range: "min",
-        value: 100,
+        value: initZoom*100,
         min: 50,
         max: 200,
         animate: "slow",
@@ -3414,9 +3415,6 @@
           .style("font-size", "12px")
           .style("color", v.color);
       });
-
-      console.log(data.box);
-      console.log(data.connection);
 
       l.append("span")
         .attr("id", "menu-toggle")
@@ -3791,7 +3789,12 @@
           // end of copy-pasted
         });
 
+          //console.log(sval3)
+          
+          //zoomFunction()
+
       function zoomFunction() {
+        console.log('zoooming'+ sval3)
         //var element = document.querySelector("svg");
         //element.style.zoom = sval3;
         d3.select("svg")
@@ -4142,27 +4145,40 @@
             .attr("class", "fas fa-times")
             .style("left", "10px");
           l.style("width", "200px");
-          w.style("left", (180) + "px").style("top", (40) + "px");
+          w.style("left", 180 + "px").style("top", 40 + "px");
           topBar.style("width", global_width + 190 + "px").style("display", "");
-
         }
       });
-          var shift_click = false;
-        d3.select("body").on("keydown", function() {
-
-          if (d3.event.keyCode === 16) {
-            // SHIFT
-            shift_click = true
-          }
+            zoomFunction();
+      hotkeys("*", function(event, handler) {
+        console.log(hotkeys.getPressedKeyCodes())
+        switch (handler.key) {
+          case "ctrl+37":
+            alert("you pressed ctrl+left!");
+            break;
+          case "ctrl+b":
+            alert("you pressed ctrl+b!");
+            break;
+          case "r":
+            alert("you pressed r!");
+            break;
+          case "f":
+            alert("you pressed f!");
+            break;
+          default:
+            //alert(event);
+        }
+      });
+      /* d3.select("body")
+        .on("keydown", function() {
           if (d3.event.keyCode === 37) {
-            // LEFT
-            left_click = true
-            if (shift_click === true) {
-              if (idIndex >= 0) {
-                idIndex--;
-                stepID();
-              }
-            } else {
+            // left + ctrl
+            if (d3.event.ctrlKey) {
+              idIndex = -1;
+              assignmentIndex = -1;
+              stepID();
+            }
+            if (d3.event.keyCode === 16) {
               if (assignmentIndex >= 0) {
                 assignmentIndex--;
                 stepAssignment();
@@ -4170,40 +4186,51 @@
             }
           }
           if (d3.event.keyCode === 39) {
-            // RIGHT
-            right_click = true
-            if (shift_click === true) {
-              if (idIndex < listOfID.length - 1) {
-                idIndex++;
-                stepID();
-              }
-            } else {
+            // right + ctrl
+            if (d3.event.ctrlKey) {
+              idIndex = listOfID.length - 1;
+              assignmentIndex = listOfAssignmentNumber1.length - 1;
+              stepID();
+            }
+            if (d3.event.keyCode === 16) {
               if (assignmentIndex < listOfAssignmentNumber1.length) {
                 assignmentIndex++;
                 stepAssignment();
               }
             }
           }
-          if (d3.event.keyCode === 38) {
-            idIndex = -1;
-            assignmentIndex = -1;
-            stepID();
-          }
-          if (d3.event.keyCode === 40) {
-            idIndex = listOfID.length - 1;
-            assignmentIndex = listOfAssignmentNumber1.length - 1;
-            stepID();
-          }
-          if (shift_click === true && left_click === true)  {
-            console.log('shift + left')
-          }
-        })
-        .on("keyup", function() {
+
           if (d3.event.keyCode === 16) {
             // SHIFT
-            shift_click = false;
+            if (d3.event.keyCode === 37) {
+              if (assignmentIndex >= 0) {
+                assignmentIndex--;
+                stepAssignment();
+              }
+            }
+            if (d3.event.keyCode === 39) {
+              if (assignmentIndex < listOfAssignmentNumber1.length) {
+                assignmentIndex++;
+                stepAssignment();
+              }
+            }
+          }
+          if (d3.event.keyCode === 18) {
+            // ALT
+            alt_click = true;
+            if (d3.event.keyCode === 37) {
+              idIndex = -1;
+              assignmentIndex = -1;
+              stepID();
+            }
+            if (d3.event.keyCode === 39) {
+              idIndex = listOfID.length - 1;
+              assignmentIndex = listOfAssignmentNumber1.length - 1;
+              stepID();
+            }
           }
         })
+        .on("keyup", function() {}); */
       //blink();
     });
   </script>
