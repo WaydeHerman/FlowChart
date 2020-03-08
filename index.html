@@ -15,7 +15,6 @@
       crossorigin="anonymous"
     ></script>
     <link href="jquery-ui.min.css" rel="stylesheet" type="text/css" />
-    <script src="hotkeys.min.js"></script>
     <style type="text/css">
       @import url("https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap");
 
@@ -3359,17 +3358,17 @@
           sliderFunction();
         }
       });
-          // initial zoom:
-          console.log('global_width', global_width)
-          console.log('window.innerWidth', window.innerWidth)
-          console.log('req_scale', global_width/window.innerWidth)
-          initZoom = window.innerWidth/global_width
-          sval3 = initZoom
-          console.log('initZoom', initZoom)
+      // initial zoom:
+      console.log("global_width", global_width);
+      console.log("window.innerWidth", window.innerWidth);
+      console.log("req_scale", global_width / window.innerWidth);
+      initZoom = window.innerWidth / global_width;
+      sval3 = initZoom;
+      console.log("initZoom", initZoom);
       //sval3 = 1;
       $("#slider3").slider({
         range: "min",
-        value: initZoom*100,
+        value: initZoom * 100,
         min: 50,
         max: 200,
         animate: "slow",
@@ -3789,12 +3788,12 @@
           // end of copy-pasted
         });
 
-          //console.log(sval3)
-          
-          //zoomFunction()
+      //console.log(sval3)
+
+      //zoomFunction()
 
       function zoomFunction() {
-        console.log('zoooming'+ sval3)
+        console.log("zoooming" + sval3);
         //var element = document.querySelector("svg");
         //element.style.zoom = sval3;
         d3.select("svg")
@@ -4139,6 +4138,7 @@
             var topBarWidth = window.innerWidth - 190;
           }
           topBar.style("width", topBarWidth + "px").style("display", "none");
+          initZoom = window.innerWidth / global_width;
         } else {
           menuToggle = 1;
           d3.select("#menu-toggle")
@@ -4147,90 +4147,87 @@
           l.style("width", "200px");
           w.style("left", 180 + "px").style("top", 40 + "px");
           topBar.style("width", global_width + 190 + "px").style("display", "");
+          initZoom = (window.innerWidth - 180) / global_width;
         }
+        sval3 = initZoom;
+        zoomFunction();
       });
-            zoomFunction();
-      hotkeys("*", function(event, handler) {
-        console.log(hotkeys.getPressedKeyCodes())
-        switch (handler.key) {
-          case "ctrl+37":
-            alert("you pressed ctrl+left!");
-            break;
-          case "ctrl+b":
-            alert("you pressed ctrl+b!");
-            break;
-          case "r":
-            alert("you pressed r!");
-            break;
-          case "f":
-            alert("you pressed f!");
-            break;
-          default:
-            //alert(event);
-        }
-      });
-      /* d3.select("body")
+      zoomFunction();
+      var left_press = false;
+      var right_press = false;
+      var a_press = false;
+      var z_press = false;
+      var x_press = false;
+
+      d3.select("body")
         .on("keydown", function() {
           if (d3.event.keyCode === 37) {
-            // left + ctrl
-            if (d3.event.ctrlKey) {
-              idIndex = -1;
-              assignmentIndex = -1;
-              stepID();
-            }
-            if (d3.event.keyCode === 16) {
-              if (assignmentIndex >= 0) {
-                assignmentIndex--;
-                stepAssignment();
-              }
-            }
+            left_press = true;
           }
           if (d3.event.keyCode === 39) {
-            // right + ctrl
-            if (d3.event.ctrlKey) {
-              idIndex = listOfID.length - 1;
-              assignmentIndex = listOfAssignmentNumber1.length - 1;
-              stepID();
-            }
-            if (d3.event.keyCode === 16) {
-              if (assignmentIndex < listOfAssignmentNumber1.length) {
-                assignmentIndex++;
-                stepAssignment();
-              }
+            right_press = true;
+          }
+          if (d3.event.keyCode === 65) {
+            a_press = true;
+          }
+          if (d3.event.keyCode === 90) {
+            z_press = true;
+          }
+          if (d3.event.keyCode === 88) {
+            x_press = true;
+          }
+          if (left_press === true && a_press === true) {
+            idIndex = -1;
+            assignmentIndex = -1;
+            stepID();
+          }
+          if (left_press === true && z_press === true) {
+            if (assignmentIndex >= 0) {
+              assignmentIndex--;
+              stepAssignment();
             }
           }
-
-          if (d3.event.keyCode === 16) {
-            // SHIFT
-            if (d3.event.keyCode === 37) {
-              if (assignmentIndex >= 0) {
-                assignmentIndex--;
-                stepAssignment();
-              }
-            }
-            if (d3.event.keyCode === 39) {
-              if (assignmentIndex < listOfAssignmentNumber1.length) {
-                assignmentIndex++;
-                stepAssignment();
-              }
-            }
-          }
-          if (d3.event.keyCode === 18) {
-            // ALT
-            alt_click = true;
-            if (d3.event.keyCode === 37) {
-              idIndex = -1;
-              assignmentIndex = -1;
+          if (left_press === true && x_press === true) {
+            if (idIndex >= 0) {
+              idIndex--;
               stepID();
             }
-            if (d3.event.keyCode === 39) {
-              idIndex = listOfID.length - 1;
-              assignmentIndex = listOfAssignmentNumber1.length - 1;
+          }
+          if (right_press === true && a_press === true) {
+            idIndex = listOfID.length - 1;
+            assignmentIndex = listOfAssignmentNumber1.length - 1;
+            stepID();
+          }
+          if (right_press === true && z_press === true) {
+            if (assignmentIndex < listOfAssignmentNumber1.length) {
+              assignmentIndex++;
+              stepAssignment();
+            }
+          }
+          if (right_press === true && x_press === true) {
+            if (idIndex < listOfID.length - 1) {
+              idIndex++;
               stepID();
             }
           }
         })
-        .on("keyup", function() {}); */
+        .on("keyup", function() {
+          if (d3.event.keyCode === 37) {
+            left_press = false;
+          }
+          if (d3.event.keyCode === 39) {
+            right_press = false;
+          }
+          if (d3.event.keyCode === 65) {
+            a_press = false;
+          }
+          if (d3.event.keyCode === 90) {
+            z_press = false;
+          }
+          if (d3.event.keyCode === 88) {
+            x_press = false;
+          }
+        });
       //blink();
     });
   </script>
