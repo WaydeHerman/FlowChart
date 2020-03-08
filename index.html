@@ -490,6 +490,8 @@
     d3.json("6550797.json").then(function(data) {
       data.comment = "";
 
+      console.log(data)
+
       var filePath1 = data.general.logo_1;
       var filePath2 = data.general.logo_2;
       /* data.connection.forEach(function(v) {
@@ -1977,7 +1979,7 @@
             n.subCol = 1;
           }
 
-          if (tEntry.sub < n.subCol) {
+          if (tEntry.sub < n.subCol && n.type !== "Inventor") { 
             tEntry.sub = n.subCol;
           }
           if (c.indexOf(n.execution_date) < 0) {
@@ -2072,8 +2074,12 @@
       var container = d3.select("#container"),
         u = { top: 30, left: 190, right: 20, bottom: 40 },
         et = d3.sum(t, function(n) {
+          console.log(n)
           return n.leftPad + n.sub * n.subWidth * (n.items.length > 0 ? 1 : 0);
         }),
+        ownershipt = t[0].leftPad + d3.max(t[0].items, function(v) {
+          return v.subCol
+        }) * t[0].subWidth * (t[0].items.length > 0 ? 1 : 0),
         pt = Math.max(
           c.length * t[0].subHeight,
           t[2].items.length * t[2].subHeight + t[2].preHeight
@@ -2083,7 +2089,7 @@
         global_height = window.innerHeight + 20;
       }
       global_height -= 80;
-      global_width = et + 40 + u.right;
+      global_width = d3.max([et, ownershipt]) + 40 + u.right;
       if (global_width < window.innerWidth - 190) {
         global_width = window.innerWidth - 190;
       }
@@ -2133,7 +2139,7 @@
       */
       b = 70;
       st = 0;
-      t.forEach(function(n, index) {
+      t.forEach(function(n, index) {  
         if (n.id === 0) {
           tlineDist = 95;
         }
@@ -2155,6 +2161,7 @@
         }
 
         missing = 0;
+        console.log(n.items)
         n.items.forEach(function(m, index) {
           m.x = b + n.leftPad + (m.subCol - 1) * n.subWidth + n.subWidth / 2;
           if (
@@ -2363,7 +2370,6 @@
             }
           }
         });
-
         b += n.leftPad + n.sub * n.subWidth;
       });
 
