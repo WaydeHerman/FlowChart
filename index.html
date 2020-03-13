@@ -490,8 +490,6 @@
     d3.json("6550797.json").then(function(data) {
       data.comment = "";
 
-      console.log(data)
-
       var filePath1 = data.general.logo_1;
       var filePath2 = data.general.logo_2;
       /* data.connection.forEach(function(v) {
@@ -2074,7 +2072,6 @@
       var container = d3.select("#container"),
         u = { top: 30, left: 190, right: 20, bottom: 40 },
         et = d3.sum(t, function(n) {
-          console.log(n)
           return n.leftPad + n.sub * n.subWidth * (n.items.length > 0 ? 1 : 0);
         }),
         ownershipt = t[0].leftPad + d3.max(t[0].items, function(v) {
@@ -2139,7 +2136,7 @@
       */
       b = 70;
       st = 0;
-      t.forEach(function(n, index) {  
+      t.forEach(function(n, index) { 
         if (n.id === 0) {
           tlineDist = 95;
         }
@@ -2301,13 +2298,25 @@
                 var boxY = d3.select(this).attr("y");
                 boxmenuNEW(d, boxX, boxY);
               });
+              console.log(m)
             if (m.name.length <= 22 || m.type === "Inventor") {
-              r.append("text")
-                .attr("class", "btext")
-                .datum(m)
-                .attr("x", m.x - (s ? 65 : 84))
-                .attr("y", m.y - 8)
-                .text(m.name);
+              if (m.type !== "Inventor" || m.name.length <= 22) {
+                r.append("text")
+                  .attr("class", "btext")
+                  .datum(m)
+                  .attr("x", m.x - (s ? 65 : 84))
+                  .attr("y", m.y - 8)
+                  .text(m.name);
+              } else {
+                h = m.name.substr(0, 22).lastIndexOf(" ");
+                                r.append("text")
+                  .attr("class", "btext")
+                  .datum(m)
+                  .attr("x", m.x - (s ? 65 : 84))
+                  .attr("y", m.y - 8)
+                  .text(m.name.substr(0, h) + "...");
+              }
+
             } else {
               h = m.name.substr(0, 22).lastIndexOf(" ");
               e = m.name.substr(h + 1);
@@ -2548,7 +2557,7 @@
             // need to check left box type
             // need to draw the line
             // need to find out the dy for slots for diff box types
-            if (t.x > i.x) {
+            if (t.x > i.x && t.type !== "Inventor") {
               var maxSlotLeft = t.connectLeft_short.length;
               var maxSlotRight = i.connectRight_short.length;
 
@@ -2630,6 +2639,30 @@
               e.push([t.x + 145, t.y - 30 + slotRight * 10]);
               e.push([i.x - margin[1], i.y - margin[2] + slotLeft * margin[3]]);
               e.push([i.x - margin[0], i.y - margin[2] + slotLeft * margin[3]]);
+            }
+            if (t.x > i.x && t.type === "Inventor") {
+              var maxSlotRight = i.connectRight_short.length;
+
+              i.connectRight_short.forEach(function(v, i) {
+                if (n.date === v) {
+                  tmp_slot = i;
+                  if (tmp_slot >= 6) {
+                    tmp_slot = 6;
+                  }
+                  if (maxSlotRight <= 5) {
+                    slotRight = tmp_slot + 1;
+                  } else {
+                    slotRight = tmp_slot;
+                  }
+                }
+              });
+
+              margin = [95, 145, 30, 10];
+
+              e.push([t.x, t.y + 36]);
+              e.push([t.x, t.y + 56]);
+              e.push([i.x + 145, i.y - 30 + slotRight * 10]);
+              e.push([i.x + 95, i.y - 30 + slotRight * 10]);
             }
           }
         }
@@ -3368,7 +3401,7 @@
       console.log("global_width", global_width);
       console.log("window.innerWidth", window.innerWidth);
       console.log("req_scale", global_width / window.innerWidth);
-      initZoom = window.innerWidth / global_width;
+      initZoom = (window.innerWidth -10) / global_width;
       sval3 = initZoom;
       console.log("initZoom", initZoom);
       //sval3 = 1;
@@ -4144,7 +4177,7 @@
             var topBarWidth = window.innerWidth - 190;
           }
           topBar.style("width", topBarWidth + "px").style("display", "none");
-          initZoom = window.innerWidth / global_width;
+          initZoom = (window.innerWidth - 10) / global_width;
         } else {
           menuToggle = 1;
           d3.select("#menu-toggle")
