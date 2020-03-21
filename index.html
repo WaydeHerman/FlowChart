@@ -2058,15 +2058,23 @@
       PAGE DEFINITION:
 
       */
+
       var container = d3.select("#container"),
         u = { top: 30, left: 190, right: 20, bottom: 40 },
         et = d3.sum(t, function(n) {
           return n.leftPad + n.sub * n.subWidth * (n.items.length > 0 ? 1 : 0);
-        }),
+        });
+        if (t[2].items.length >= 1) {
         ownershipt = t[0].leftPad + d3.max(t[0].items, function(v) {
           return v.subCol
-        }) * t[0].subWidth * (t[0].items.length > 0 ? 1 : 0) + t[2].leftPad + t[2].items[0].subCol * t[0].subWidth + t[0].subWidth / 2,
-        pt = Math.max(
+        }) * t[0].subWidth * (t[0].items.length > 0 ? 1 : 0) + t[2].leftPad + t[2].items[0].subCol * t[0].subWidth + t[0].subWidth / 2;
+        } else {
+                  ownershipt = t[0].leftPad + d3.max(t[0].items, function(v) {
+          return v.subCol
+        }) * t[0].subWidth * (t[0].items.length > 0 ? 1 : 0) + t[2].leftPad + t[0].subWidth / 2;
+        }
+
+       var pt = Math.max(
           c.length * t[0].subHeight,
           t[2].items.length * t[2].subHeight + t[2].preHeight
         ),
