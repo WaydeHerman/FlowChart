@@ -487,8 +487,10 @@
       Loading Data:
 
       */
-    d3.json("D711418.json").then(function(data) {
+    d3.json("8682400.json").then(function(data) {
       data.comment = "";
+
+      console.log(data)
 
       var filePath1 = data.general.logo_1;
       var filePath2 = data.general.logo_2;
@@ -1966,6 +1968,10 @@
             n.subCol = 1;
           }
 
+          if (n.mainCol === 3) {
+            n.subCol = 1;
+          }
+
           if (tEntry.sub < n.subCol && n.type !== "Inventor") { 
             tEntry.sub = n.subCol;
           }
@@ -2073,10 +2079,11 @@
           return v.subCol
         }) * t[0].subWidth * (t[0].items.length > 0 ? 1 : 0) + t[2].leftPad + t[0].subWidth / 2;
         }
+        var column3
 
        var pt = Math.max(
           c.length * t[0].subHeight,
-          t[2].items.length * t[2].subHeight + t[2].preHeight
+          t[2].items.length * t[2].subHeight + t[2].subHeight/2 + t[2].preHeight + t[0].subHeight
         ),
         global_height = pt + u.top + u.bottom;
       if (global_height < window.innerHeight) {
@@ -2096,8 +2103,10 @@
         (wt = w.append("defs")),
         (ot = w.append("g")),
         (o = w.append("g")),
-        (r = w.append("g"));
-      bm = w.append("g");
+        (r = w.append("g"));  
+      bm = w.append("g")
+      console.log('pt', pt)
+      console.log('global_width', global_height)
 
       colorOptions.forEach(function(n, t) {
         wt.append("marker")
@@ -2130,6 +2139,7 @@
 
       BOXES DEFINITION:
 
+
       */
       b = 70;
       st = 0;
@@ -2157,8 +2167,12 @@
         missing = 0;
         columnThreeCheck = 0
 
+        console.log(n.items)
+
         n.items.forEach(function(m, index) {
+
           m.x = b + n.leftPad + (m.subCol - 1) * n.subWidth + n.subWidth / 2;
+
           if (
             m.mainCol == 3 &&
             (m.execution_date == null ||
@@ -2166,22 +2180,30 @@
               m.recorded_date == null ||
               m.recorded_date == "")
           ) {
+            //m.x = b + n.leftPad + n.subWidth + n.subWidth / 2;
+            
             maxX = 0
-            t.forEach(function(v) {
+            t.forEach(function(v, index) {
+              if (index < 2) {
               v.items.forEach(function(w) {
                 if (w.x > maxX) {
                   maxX = w.x
                 }
               })
+              }
+
             })
             if (maxX > m.x) {
-              m.x = maxX + n.leftPad + (m.subCol) * n.subWidth;
+              m.x = maxX + n.leftPad + n.subWidth;
             }
             m.y = t[0].subHeight + 
               (index - missing) * n.subHeight +
               n.subHeight / 2 +
               n.preHeight +
               st;
+              console.log('m.name', m.name)
+              console.log('m.y', m.y)
+              
 
             var boxThreeWidth = 230;
 
@@ -2247,6 +2269,7 @@
                 .text(e);
             }
           } else {
+            
             if (m.mainCol == 3) {
               missing += 1;
             }
@@ -2260,6 +2283,9 @@
             m.y =
               c.lastIndexOf(m.execution_date) * t[0].subHeight +
               t[0].subHeight / 2;
+
+
+            
 
             o.append("line")
               .attr("class", "tline")
