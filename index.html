@@ -445,6 +445,7 @@
     var menuReveal = 0;
     var researchModeActive = 0;
     var researchModeWidth = 600;
+    var inventors = 0
 
     function blink() {
       d3.selectAll(".comment-circle")
@@ -1865,7 +1866,7 @@
           subHeight: 40,
           sub: 1,
           items: [],
-          preHeight: 30
+          preHeight: 20
         }
       ];
       // end of var t
@@ -1934,6 +1935,10 @@
 
       // placing boxes in t variable"
       data.box.forEach(function(n) {
+
+        if (n.type === "Inventor") {
+          inventors += 1
+        }
         var r, u, e, o, s;
         n.subCol = 1;
         // populating t list:
@@ -1972,7 +1977,7 @@
             n.subCol = 1;
           }
 
-          if (tEntry.sub < n.subCol && n.type !== "Inventor") { 
+          if (tEntry.sub < n.subCol && n.type !== "Inventor") {
             tEntry.sub = n.subCol;
           }
           if (c.indexOf(n.execution_date) < 0) {
@@ -2070,14 +2075,27 @@
         et = d3.sum(t, function(n) {
           return n.leftPad + n.sub * n.subWidth * (n.items.length > 0 ? 1 : 0);
         });
-        if (t[2].items.length >= 1) {
+        /* if (t[2].items.length >= 1) {
         ownershipt = t[0].leftPad + d3.max(t[0].items, function(v) {
           return v.subCol
         }) * t[0].subWidth * (t[0].items.length > 0 ? 1 : 0) + t[2].leftPad + t[2].items[0].subCol * t[0].subWidth + t[0].subWidth / 2;
         } else {
-                  ownershipt = t[0].leftPad + d3.max(t[0].items, function(v) {
+        ownershipt = t[0].leftPad + d3.max(t[0].items, function(v) {
           return v.subCol
         }) * t[0].subWidth * (t[0].items.length > 0 ? 1 : 0) + t[2].leftPad + t[0].subWidth / 2;
+        } */
+        console.log(inventors)
+        if (inventors === 4) {
+          ownershipt = 50 + d3.max(t[0].items, function(v) {
+          return v.subCol
+        }) * 240 * (t[0].items.length > 0 ? 1 : 0)
+        } else {
+          if (inventors > 5) {
+          ownershipt = 50 + 5 * 240 * (t[0].items.length > 0 ? 1 : 0)
+          } else {
+            ownershipt = 100
+          }
+          
         }
         var column3
 
@@ -2105,8 +2123,6 @@
         (o = w.append("g")),
         (r = w.append("g"));  
       bm = w.append("g")
-      console.log('pt', pt)
-      console.log('global_width', global_height)
 
       colorOptions.forEach(function(n, t) {
         wt.append("marker")
@@ -2141,6 +2157,7 @@
 
 
       */
+
       b = 70;
       st = 0;
       t.forEach(function(n, index) { 
@@ -2166,13 +2183,30 @@
 
         missing = 0;
         columnThreeCheck = 0
-
-        console.log(n.items)
+        inventorCount = 0
+        inventorX = 0
+        inventorY = 0
 
         n.items.forEach(function(m, index) {
+          if (m.type === "Inventor") {
+            inventorCount += 1
+            if (inventorCount >= 6) {
+              inventorCount = 0
+              inventorX = 3 * 240
+              inventorY += 120
+            }
+            if (inventorCount >= 3 && inventorX !== 0) {
+              inventorCount = 0
+              inventorY += 120
+              inventorX += 3 * 240
+            }
+          }
 
           m.x = b + n.leftPad + (m.subCol - 1) * n.subWidth + n.subWidth / 2;
-          console.log(m.name)
+          if (m.type === "Inventor" && inventors > 3) {
+            m.x = b + 50 + (m.subCol - 1) * 240 + 240 / 2 - inventorX
+          }
+          
           if (
             m.mainCol == 3 &&
             (m.execution_date == null ||
@@ -2181,12 +2215,11 @@
               m.recorded_date == "")
           ) {
             //m.x = b + n.leftPad + n.subWidth + n.subWidth / 2;
-            
             maxX = 0
             t.forEach(function(v, index) {
               if (index < 2) {
               v.items.forEach(function(w) {
-                if (w.x > maxX) {
+                if (w.x > maxX && w.type !== "Inventor") {
                   maxX = w.x
                 }
               })
@@ -2194,17 +2227,21 @@
 
             })
             if (maxX > m.x) {
-              m.x = maxX + n.leftPad + n.subWidth;
+              m.x = maxX + n.leftPad + n.subWidth
             }
-            console.log(m.x)
+            inventorsYY = 0
+            if (inventors > 5) {
+              inventorsYY = Math.floor(1 + (inventors - 6)/3)
+            }
+            
             m.y = t[0].subHeight + 
               (index - missing) * n.subHeight +
               n.subHeight / 2 +
               n.preHeight +
-              st;
+              st + (inventorsYY * 120)
               
 
-            var boxThreeWidth = 230;
+            var boxThreeWidth = 190;
 
             l = r
               .append("rect")
@@ -2238,7 +2275,7 @@
                 boxmenuNEW(d, boxX, boxY);
               });
 
-            if (m.name.length <= 35) {
+            if (m.name.length <= 30) {
               l.attr("y", m.y - 15).attr("height", 30);
 
               r.append("text")
@@ -2248,17 +2285,21 @@
                 .attr("y", m.y)
                 .attr("dy", "0.32em")
                 .text(m.name);
+
+                console.log('e', m.name)
             } else {
               //st += 10;
               m.y += 5;
               l.attr("y", m.y - 22).attr("height", 30);
-              a = m.name.substr(0, 30).lastIndexOf(" ");
+              a = m.name.substr(0, 25).lastIndexOf(" ");
               y = m.name.substr(a + 1);
               if (y.length > 1) {
-                e = m.name.substr(0, 30) + "...";
+                e = m.name.substr(0, 25) + "...";
               } else {
                 e = m.name.substr(0, a);
               }
+
+              console.log('e', e)
 
               r.append("text")
                 .attr("class", "btext box-3")
@@ -2281,7 +2322,7 @@
 
             m.y =
               c.lastIndexOf(m.execution_date) * t[0].subHeight +
-              t[0].subHeight / 2;
+              t[0].subHeight / 2 + inventorY;
 
 
             
@@ -2693,8 +2734,8 @@
 
               e.push([t.x, t.y + 36]);
               e.push([t.x, t.y + 56]);
-              e.push([i.x + 145, i.y - 30 + slotRight * 10]);
-              e.push([i.x + 95, i.y - 30 + slotRight * 10]);
+              e.push([i.x, i.y - 76]);
+              e.push([i.x, i.y - 36]);
             }
           }
         }
