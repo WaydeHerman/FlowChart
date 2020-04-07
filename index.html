@@ -488,7 +488,7 @@
       Loading Data:
 
       */
-    d3.json("8682400.json").then(function(data) {
+    d3.json("D720766 (1).json").then(function(data) {
       data.comment = "";
 
       console.log(data)
@@ -2084,7 +2084,6 @@
           return v.subCol
         }) * t[0].subWidth * (t[0].items.length > 0 ? 1 : 0) + t[2].leftPad + t[0].subWidth / 2;
         } */
-        console.log(inventors)
         if (inventors === 4) {
           ownershipt = 50 + d3.max(t[0].items, function(v) {
           return v.subCol
@@ -2098,6 +2097,10 @@
           
         }
         var column3
+              var inventorBlankDates = Math.ceil((inventors - 5)/3)
+      for (let i = 0; i < inventorBlankDates; i++) {
+        c.splice( 1, 0, "");
+      }
 
        var pt = Math.max(
           c.length * t[0].subHeight,
@@ -2157,6 +2160,7 @@
 
 
       */
+      
 
       b = 70;
       st = 0;
@@ -2186,26 +2190,31 @@
         inventorCount = 0
         inventorX = 0
         inventorY = 0
+        addRows = false
 
         n.items.forEach(function(m, index) {
+          
           if (m.type === "Inventor") {
+            
             inventorCount += 1
             if (inventorCount >= 6) {
               inventorCount = 0
-              inventorX = 3 * 240
+              addRows = true
               inventorY += 120
             }
             if (inventorCount >= 3 && inventorX !== 0) {
               inventorCount = 0
               inventorY += 120
-              inventorX += 3 * 240
+            }
+            if (addRows === true) {
+              inventorX =  (inventorCount - 1) * 480 + inventorY*6 
             }
           }
 
           m.x = b + n.leftPad + (m.subCol - 1) * n.subWidth + n.subWidth / 2;
           if (m.type === "Inventor" && inventors > 3) {
             m.x = b + 50 + (m.subCol - 1) * 240 + 240 / 2 - inventorX
-          }
+          } 
           
           if (
             m.mainCol == 3 &&
@@ -2233,7 +2242,7 @@
             if (inventors > 5) {
               inventorsYY = Math.floor(1 + (inventors - 6)/3)
             }
-            
+
             m.y = t[0].subHeight + 
               (index - missing) * n.subHeight +
               n.subHeight / 2 +
@@ -2285,8 +2294,6 @@
                 .attr("y", m.y)
                 .attr("dy", "0.32em")
                 .text(m.name);
-
-                console.log('e', m.name)
             } else {
               //st += 10;
               m.y += 5;
@@ -2298,8 +2305,6 @@
               } else {
                 e = m.name.substr(0, a);
               }
-
-              console.log('e', e)
 
               r.append("text")
                 .attr("class", "btext box-3")
@@ -2319,10 +2324,15 @@
               (new Date(m.recorded_date) - new Date(m.execution_date)) /
                 (ft * 365)
             );
-
             m.y =
               c.lastIndexOf(m.execution_date) * t[0].subHeight +
+              t[0].subHeight / 2
+
+            if (m.type === "Inventor") {
+              m.y =
+              c.lastIndexOf(m.execution_date) * t[0].subHeight +
               t[0].subHeight / 2 + inventorY;
+            }
 
 
             
@@ -2471,7 +2481,7 @@
           .attr("dy", "0.32em")
           .text(n.replace("d", ""));
 
-        if (i !== 0) {
+        if (i !== 0 && (n != "" && c[i - 1] != "")) {
           o.append("text")
             .attr("class", "thead2")
             .datum(n)
