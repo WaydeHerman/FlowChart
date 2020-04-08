@@ -488,7 +488,7 @@
       Loading Data:
 
       */
-    d3.json("D720766 (1).json").then(function(data) {
+    d3.json("10417432.json").then(function(data) {
       data.comment = "";
 
       console.log(data)
@@ -2197,17 +2197,18 @@
           if (m.type === "Inventor") {
             
             inventorCount += 1
+            
             if (inventorCount >= 6) {
-              inventorCount = 0
+              inventorCount = 1
               addRows = true
               inventorY += 120
             }
-            if (inventorCount >= 3 && inventorX !== 0) {
-              inventorCount = 0
+            if (inventorCount >= 6 && inventorX !== 0) {
+              inventorCount = 1
               inventorY += 120
             }
             if (addRows === true) {
-              inventorX =  (inventorCount - 1) * 480 + inventorY*6 
+              inventorX =  (inventorCount -3) * 480 + (inventorY/120)*(5*240)
             }
           }
 
