@@ -444,12 +444,7 @@
     var ft = 864e5;
     var menuReveal = 0;
     var researchModeActive = 0;
-    var researchModeWidth = 600;
-    var inventors = 0;
-    var inventorCount = 0;
-    var inventorX = 0;
-    var inventorY = 0;
-    var addRows = false;    
+    var researchModeWidth = 600;  
 
     function blink() {
       d3.selectAll(".comment-circle")
@@ -498,7 +493,11 @@
       console.log(data)
 
       d3.select("body").style("background-color", data.general.background)
-
+          var inventors = 0;
+    var inventorCount = 0;
+    var inventorX = 0;
+    var inventorY = 0;
+    var addRows = false;  
       var filePath1 = data.general.logo_1;
       var filePath2 = data.general.logo_2;
       /* data.connection.forEach(function(v) {
