@@ -445,7 +445,11 @@
     var menuReveal = 0;
     var researchModeActive = 0;
     var researchModeWidth = 600;
-    var inventors = 0
+    var inventors = 0;
+    var inventorCount = 0;
+    var inventorX = 0;
+    var inventorY = 0;
+    var addRows = false;
 
     function blink() {
       d3.selectAll(".comment-circle")
@@ -2210,7 +2214,7 @@
               inventorY += 120
             }
             if (addRows === true) {
-              inventorX =  (inventorCount -3) * 480 + (inventorY/120)*(5*240)
+              inventorX = (inventorCount -3) * 480 + (inventorY/120)*(5*240)
             }
           }
 
