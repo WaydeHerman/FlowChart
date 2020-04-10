@@ -449,7 +449,7 @@
     var inventorCount = 0;
     var inventorX = 0;
     var inventorY = 0;
-    var addRows = false;
+    var addRows = false;    
 
     function blink() {
       d3.selectAll(".comment-circle")
@@ -492,10 +492,12 @@
       Loading Data:
 
       */
-    d3.json("D720766 (1).json").then(function(data) {
+    d3.json("10452862.json").then(function(data) {
       data.comment = "";
 
       console.log(data)
+
+      d3.select("body").style("background-color", data.general.background)
 
       var filePath1 = data.general.logo_1;
       var filePath2 = data.general.logo_2;
