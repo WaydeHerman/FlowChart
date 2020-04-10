@@ -488,7 +488,7 @@
       Loading Data:
 
       */
-    d3.json("D720766 (1).json").then(function(data) {
+    d3.json("6550797.json").then(function(data) {
       data.comment = "";
 
       console.log(data)
@@ -1980,7 +1980,7 @@
           if (tEntry.sub < n.subCol && n.type !== "Inventor") {
             tEntry.sub = n.subCol;
           }
-          if (c.indexOf(n.execution_date) < 0) {
+          if (c.indexOf(n.execution_date) < 0 && n.type !== "3rdParties") {
             c.push(n.execution_date);
             f.push(n.execution_date);
           }
@@ -2092,7 +2092,7 @@
           if (inventors > 5) {
           ownershipt = 50 + 5 * 240 * (t[0].items.length > 0 ? 1 : 0)
           } else {
-            ownershipt = 100
+            ownershipt = 50 + 5 * 240 * (t[0].items.length > 0 ? 1 : 0)
           }
           
         }
@@ -2111,6 +2111,8 @@
         global_height = window.innerHeight + 20;
       }
       global_height -= 80;
+      console.log('et', et)
+      console.log('ownershipt', ownershipt)
       global_width = d3.max([et, ownershipt]) + 40 + u.right;
       if (global_width < window.innerWidth - 190) {
         global_width = window.innerWidth - 190;
@@ -2186,13 +2188,13 @@
         }
 
         missing = 0;
-        columnThreeCheck = 0
-        inventorCount = 0
-        inventorX = 0
-        inventorY = 0
-        addRows = false
+        var inventorCount = 0
+        var inventorX = 0
+        var inventorY = 0
+        var addRows = false
 
         n.items.forEach(function(m, index) {
+          
           
           if (m.type === "Inventor") {
             
@@ -2225,6 +2227,7 @@
               m.recorded_date == "")
           ) {
             //m.x = b + n.leftPad + n.subWidth + n.subWidth / 2;
+            
             maxX = 0
             t.forEach(function(v, index) {
               if (index < 2) {
@@ -2241,7 +2244,7 @@
               m.x = maxX
             }
  
-            inventorsYY = 0
+            var inventorsYY = 0
             if (inventors > 5) {
               inventorsYY = Math.floor(1 + (inventors - 6)/3)
             }
@@ -2312,7 +2315,7 @@
               r.append("text")
                 .attr("class", "btext box-3")
                 .datum(m)
-                .attr("x", m.x - 100)
+                .attr("x", m.x - 90)
                 .attr("y", m.y - 3)
                 .text(e);
             }
