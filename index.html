@@ -487,17 +487,15 @@
       Loading Data:
 
       */
-    d3.json("10452862.json").then(function(data) {
+    d3.json("8655307.json").then(function(data) {
       data.comment = "";
 
-      console.log(data)
-
       d3.select("body").style("background-color", data.general.background)
-          var inventors = 0;
-    var inventorCount = 0;
-    var inventorX = 0;
-    var inventorY = 0;
-    var addRows = false;  
+      var inventors = 0;
+      var inventorCount = 0;
+      var inventorX = 0;
+      var inventorY = 0;
+      var addRows = false;  
       var filePath1 = data.general.logo_1;
       var filePath2 = data.general.logo_2;
       /* data.connection.forEach(function(v) {
@@ -2077,9 +2075,18 @@
 
       var container = d3.select("#container"),
         u = { top: 30, left: 190, right: 20, bottom: 40 },
-        et = d3.sum(t, function(n) {
-          return n.leftPad + n.sub * n.subWidth * (n.items.length > 0 ? 1 : 0);
-        });
+        et = 0
+        t.forEach(function(n, i) {
+          if (i === 0) {
+            et += n.leftPad + n.sub * n.subWidth
+          } else {
+            if (i === 1) {
+                et += n.leftPad + n.sub * n.subWidth * (n.items.length > 0 ? 1 : 0);
+            } else {
+            et += n.leftPad + n.sub * n.subWidth * (n.items.length > 0 ? 1 : 0);
+            }
+          }
+        })
         /* if (t[2].items.length >= 1) {
         ownershipt = t[0].leftPad + d3.max(t[0].items, function(v) {
           return v.subCol
@@ -2097,7 +2104,9 @@
           if (inventors > 5) {
           ownershipt = 50 + 5 * 240 * (t[0].items.length > 0 ? 1 : 0)
           } else {
-            ownershipt = 50 + 5 * 240 * (t[0].items.length > 0 ? 1 : 0)
+            if (inventors === 3) {
+              ownershipt = 90 + 3 * 240 * (t[0].items.length > 0 ? 1 : 0)
+            }
           }
           
         }
@@ -2116,12 +2125,10 @@
         global_height = window.innerHeight + 20;
       }
       global_height -= 80;
-      console.log('et', et)
-      console.log('ownershipt', ownershipt)
       global_width = d3.max([et, ownershipt]) + 40 + u.right;
-      if (global_width < window.innerWidth - 190) {
+      /* if (global_width < window.innerWidth - 190) {
         global_width = window.innerWidth - 190;
-      }
+      } */
       (w = container
         .append("svg")
         .attr("width", global_width)
