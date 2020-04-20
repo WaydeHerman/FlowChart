@@ -487,7 +487,7 @@
       Loading Data:
 
       */
-    d3.json("8655307.json").then(function(data) {
+    d3.json("8533844.json").then(function(data) {
       data.comment = "";
 
       d3.select("body").style("background-color", data.general.background)
@@ -2102,10 +2102,16 @@
         }) * 240 * (t[0].items.length > 0 ? 1 : 0)
         } else {
           if (inventors > 5) {
-          ownershipt = 50 + 5 * 240 * (t[0].items.length > 0 ? 1 : 0)
+          ownershipt = 70 + 5 * 240 * (t[0].items.length > 0 ? 1 : 0)
           } else {
             if (inventors === 3) {
               ownershipt = 90 + 3 * 240 * (t[0].items.length > 0 ? 1 : 0)
+            } else {
+              if (inventors === 5) {
+                ownershipt = 90 + 5 * 240 * (t[0].items.length > 0 ? 1 : 0)
+              } else {
+                ownershipt = 90 + 3 * 240 * (t[0].items.length > 0 ? 1 : 0)
+              }
             }
           }
           
@@ -2126,9 +2132,9 @@
       }
       global_height -= 80;
       global_width = d3.max([et, ownershipt]) + 40 + u.right;
-      /* if (global_width < window.innerWidth - 190) {
+      if (global_width < window.innerWidth - 190) {
         global_width = window.innerWidth - 190;
-      } */
+      } 
       (w = container
         .append("svg")
         .attr("width", global_width)
