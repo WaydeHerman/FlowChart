@@ -2131,7 +2131,7 @@
         global_height = window.innerHeight + 20;
       }
       global_height -= 80;
-      global_width = d3.max([et, ownershipt]) + 40 + u.right;
+      global_width = d3.max([et, ownershipt, 1300]) + 40 + u.right;
       if (global_width < window.innerWidth - 190) {
         global_width = window.innerWidth - 190;
       } 
@@ -2244,9 +2244,9 @@
               m.recorded_date == null ||
               m.recorded_date == "")
           ) {
-            //m.x = b + n.leftPad + n.subWidth + n.subWidth / 2;
+            m.x = 750 + n.leftPad + n.subWidth + n.subWidth / 2;
             
-            maxX = 0
+            /* maxX = 0
             t.forEach(function(v, index) {
               if (index < 2) {
               v.items.forEach(function(w) {
@@ -2258,9 +2258,10 @@
               }
 
             })
+            
             if (maxX > m.x) {
               m.x = maxX
-            }
+            } */
  
             var inventorsYY = 0
             if (inventors > 5) {
@@ -3921,6 +3922,7 @@
 
 
       function zoomFunction() {
+        console.log('zoom')
         //var element = document.querySelector("svg");
         //element.style.zoom = sval3;
         d3.select("svg")
