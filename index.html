@@ -487,7 +487,7 @@
       Loading Data:
 
       */
-    d3.json("8533844.json").then(function(data) {
+    d3.json("9344431.json").then(function(data) {
       data.comment = "";
 
       d3.select("body").style("background-color", data.general.background)
@@ -3526,18 +3526,6 @@
       LEGEND DEFINITION:
 
       */
-      var legendHeight = data.legend.length * 18 + 12;
-      var legendSVG = menu_contents
-        .append("svg")
-        .style("top", "446px")
-        .style("left", "40px")
-        .style("position", "fixed")
-        .attr("class", "legend-svg")
-        .attr("height", legendHeight)
-        .attr("width", 108)
-        .append("g")
-        .attr("transform", "translate(" + legendHeight / 2 + "," + 200 + ")");
-
       menu_contents
         .append("text")
         .text("Line Color:")
@@ -4291,7 +4279,7 @@
         sval3 = initZoom;
         zoomFunction();
       });
-      zoomFunction();
+      //zoomFunction();
       var left_press = false;
       var right_press = false;
       var a_press = false;
