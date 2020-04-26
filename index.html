@@ -487,7 +487,7 @@
       Loading Data:
 
       */
-    d3.json("9344431.json").then(function(data) {
+    d3.json("8533844.json").then(function(data) {
       data.comment = "";
 
       d3.select("body").style("background-color", data.general.background)
@@ -2413,8 +2413,8 @@
                 boxmenuNEW(d, boxX, boxY);
               });
 
-            if (m.name.length <= 22 || m.type === "Inventor") {
-              if (m.type !== "Inventor" || m.name.length <= 22) {
+            if (m.name.length <= 24 || m.type === "Inventor") {
+              if (m.type !== "Inventor" || m.name.length <= 24) {
                 r.append("text")
                   .attr("class", "btext")
                   .datum(m)
@@ -2422,13 +2422,18 @@
                   .attr("y", m.y - 8)
                   .text(m.name);
               } else {
-                h = m.name.substr(0, 22).lastIndexOf(" ");
-                                r.append("text")
+                console.log('m.name', m.name)
+                
+                h = m.name.substr(0, 24);
+                if (h.slice(-1) == " ") {
+                  h = h.slice(0,-1)
+                }
+                r.append("text")
                   .attr("class", "btext")
                   .datum(m)
                   .attr("x", m.x - (s ? 65 : 84))
                   .attr("y", m.y - 8)
-                  .text(m.name.substr(0, h) + "...");
+                  .text(h + "...");
               }
 
             } else {
