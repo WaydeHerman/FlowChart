@@ -49,7 +49,7 @@
       }
 
       #container .thead {
-        text-anchor: end;
+        text-anchor: start;
         font-size: 11px;
       }
 
@@ -487,8 +487,10 @@
       Loading Data:
 
       */
-    d3.json("8533844.json").then(function(data) {
+    d3.json("8683593 (2).json").then(function(data) {
       data.comment = "";
+
+      console.log('data', data)
 
       d3.select("body").style("background-color", data.general.background)
       var inventors = 0;
@@ -2117,7 +2119,7 @@
           
         }
         var column3
-              var inventorBlankDates = Math.ceil((inventors-5)/5)
+              var inventorBlankDates = Math.ceil((inventors-4)/4)
       for (let i = 0; i < inventorBlankDates; i++) {
         c.splice( 1, 0, "");
       }
@@ -2215,21 +2217,27 @@
           
           
           if (m.type === "Inventor") {
+            console.log('m.name', m.name)
             
             inventorCount += 1
             
-            if (inventorCount >= 6) {
+            
+            if (inventorCount >= 5) {
               inventorCount = 1
               addRows = true
               inventorY += 120
             }
-            if (inventorCount >= 6 && inventorX !== 0) {
+            if (inventorCount >= 5 && inventorX !== 0) {
               inventorCount = 1
               inventorY += 120
             }
+            console.log('inventorCount', inventorCount)
+            console.log('addRows', addRows)
+            console.log('inventorY', inventorY)
             if (addRows === true) {
-              inventorX = (inventorCount -3) * 480 + (inventorY/120)*(5*240)
+              inventorX = (inventorCount -2.5) * 480 + (inventorY/120)*(4*240)
             }
+            console.log('inventorX', inventorX)
           }
 
           m.x = b + n.leftPad + (m.subCol - 1) * n.subWidth + n.subWidth / 2;
@@ -2264,8 +2272,9 @@
             } */
  
             var inventorsYY = 0
-            if (inventors > 5) {
-              inventorsYY = Math.floor(1 + (inventors - 6)/3)
+            if (inventors > 4) {
+              inventorsYY = Math.floor(1 + (inventors -5)/3) // WAYDE
+              console.log('inventorsYY', inventorsYY)
             }
 
             m.y = t[0].subHeight + 
@@ -2362,6 +2371,7 @@
             //sif (m.type )
 
             if (!(m.type === "Inventor" && addRows)) {
+              if (m.subCol === 1) {
             o.append("line")
               .attr("class", "tline")
               .datum(m)
@@ -2369,6 +2379,7 @@
               .attr("y1", m.y)
               .attr("x2", m.x - tlineDist)
               .attr("y2", m.y);
+              }
             }
             
 
@@ -2510,8 +2521,8 @@
         o.append("text")
           .attr("class", "thead")
           .datum(n)
-          .attr("x", 60)
-          .attr("y", (i + 0.5) * t[0].subHeight)
+          .attr("x", 85)
+          .attr("y", (i + 0.5) * t[0].subHeight- 10) 
           .attr("dy", "0.32em")
           .text(n.replace("d", ""));
 
