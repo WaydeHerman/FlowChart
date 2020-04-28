@@ -487,7 +487,7 @@
       Loading Data:
 
       */
-    d3.json("8533844.json").then(function(data) {
+    d3.json("6550797.json").then(function(data) {
       data.comment = "";
 
       console.log('data', data)
@@ -2274,7 +2274,7 @@
  
             var inventorsYY = 0
             if (inventors > 4) {
-              inventorsYY = Math.floor(1 + (inventors -5)/3) // WAYDE
+              inventorsYY = Math.floor(1 + (inventors -5)/3) 
               console.log('inventorsYY', inventorsYY)
             }
 
@@ -2722,11 +2722,11 @@
               if (t.mainCol === 3 && t.recorded_date === "") {
                 margin = [95, 160, 10, 5];
               } else {
-                margin = [95, 145, 30, 10]; // <<<<
+                margin = [95, 155, 30, 10]; // <<<<
               }
               e.push([t.x - margin[0], t.y - margin[2] + slotLeft * margin[3]]);
               e.push([t.x - margin[1], t.y - margin[2] + slotLeft * margin[3]]);
-              e.push([i.x + 145, i.y - 30 + slotRight * 10]);
+              e.push([i.x + 115, i.y - 30 + slotRight * 10]);
               e.push([i.x + 95, i.y - 30 + slotRight * 10]);
             }
             if (t.x < i.x) {
@@ -2762,10 +2762,10 @@
               if (i.mainCol === 3 && i.recorded_date === "") {
                 margin = [95, 160, 10, 5];
               } else {
-                margin = [95, 155, 30, 10];
+                margin = [95, 155, 30, 10]; // 10 on bottom
               }
               e.push([t.x + 95, t.y - 30 + slotRight * 10]);
-              e.push([t.x + 115, t.y - 30 + slotRight * 10]);
+              e.push([t.x + 115, t.y - 30 + slotRight * 10]); // 30 on top
               e.push([i.x - margin[1], i.y - margin[2] + slotLeft * margin[3]]);
               e.push([i.x - margin[0], i.y - margin[2] + slotLeft * margin[3]]);
             }
