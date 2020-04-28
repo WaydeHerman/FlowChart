@@ -2089,35 +2089,14 @@
             }
           }
         })
-        /* if (t[2].items.length >= 1) {
-        ownershipt = t[0].leftPad + d3.max(t[0].items, function(v) {
-          return v.subCol
-        }) * t[0].subWidth * (t[0].items.length > 0 ? 1 : 0) + t[2].leftPad + t[2].items[0].subCol * t[0].subWidth + t[0].subWidth / 2;
+        /*if (inventors >= 4) {
+          ownershipt = 90 + 4 * 260 * (t[0].items.length > 0 ? 1 : 0)
         } else {
-        ownershipt = t[0].leftPad + d3.max(t[0].items, function(v) {
-          return v.subCol
-        }) * t[0].subWidth * (t[0].items.length > 0 ? 1 : 0) + t[2].leftPad + t[0].subWidth / 2;
-        } */
-        if (inventors === 4) {
           ownershipt = 50 + d3.max(t[0].items, function(v) {
           return v.subCol
         }) * 240 * (t[0].items.length > 0 ? 1 : 0)
-        } else {
-          if (inventors > 5) {
-          ownershipt = 70 + 5 * 240 * (t[0].items.length > 0 ? 1 : 0)
-          } else {
-            if (inventors === 3) {
-              ownershipt = 90 + 3 * 240 * (t[0].items.length > 0 ? 1 : 0)
-            } else {
-              if (inventors === 5) {
-                ownershipt = 90 + 5 * 240 * (t[0].items.length > 0 ? 1 : 0)
-              } else {
-                ownershipt = 90 + 3 * 240 * (t[0].items.length > 0 ? 1 : 0)
-              }
-            }
-          }
-          
-        }
+        } */
+        ownershipt = 1100;
         var column3
               var inventorBlankDates = Math.ceil((inventors-4)/4)
       for (let i = 0; i < inventorBlankDates; i++) {
@@ -2133,10 +2112,11 @@
         global_height = window.innerHeight + 20;
       }
       global_height -= 80;
-      global_width = d3.max([et, ownershipt, 1300]) + 40 + u.right;
+      global_width = d3.max([et, ownershipt]) + 40 + u.right;
       if (global_width < window.innerWidth - 190) {
         global_width = window.innerWidth - 190;
       } 
+      
       (w = container
         .append("svg")
         .attr("width", global_width)
@@ -2148,7 +2128,7 @@
         (o = w.append("g")),
         (r = w.append("g"));  
       bm = w.append("g")
-
+      console.log('global_width', global_width)
       colorOptions.forEach(function(n, t) {
         wt.append("marker")
           .attr("id", "end" + t)
