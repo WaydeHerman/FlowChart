@@ -487,7 +487,7 @@
       Loading Data:
 
       */
-    d3.json("8683593 (2).json").then(function(data) {
+    d3.json("10417432.json").then(function(data) {
       data.comment = "";
 
       console.log('data', data)
@@ -1940,6 +1940,7 @@
 
       // placing boxes in t variable"
       data.box.forEach(function(n) {
+        console.log('name', n.name)
 
         if (n.type === "Inventor") {
           inventors += 1
@@ -1973,6 +1974,10 @@
               tEntry.items[tEntry.items.length - 1].execution_date
             ) {
               n.subCol = tEntry.items[tEntry.items.length - 1].subCol + 1;
+              if (tEntry.items[tEntry.items.length - 1].type === "Inventor" && n.type !== "Inventor" && n.type !== "3rdParties") {
+                n.subCol = 1
+                c.push(n.execution_date);
+              }
             }
           } else {
             n.subCol = 1;
@@ -2034,6 +2039,8 @@
         //n.step = c.indexOf(n.entryDateFormatted);
         tEntry.items.push(n);
       });
+
+      console.log('c', c)
 
       data.box.forEach(function(n) {
         if (
@@ -2164,8 +2171,9 @@
       */
       
 
-      b = 70;
+      b = 4;
       st = 0;
+      console.log('t', t)
       t.forEach(function(n, index) { 
         if (n.id === 0) {
           tlineDist = 95;
@@ -2194,13 +2202,10 @@
          addRows = false
 
         n.items.forEach(function(m, index) {
-          
+
           
           if (m.type === "Inventor") {
-            console.log('m.name', m.name)
-            
             inventorCount += 1
-            
             
             if (inventorCount >= 5) {
               inventorCount = 1
@@ -2211,18 +2216,15 @@
               inventorCount = 1
               inventorY += 120
             }
-            console.log('inventorCount', inventorCount)
-            console.log('addRows', addRows)
-            console.log('inventorY', inventorY)
+
             if (addRows === true) {
               inventorX = (inventorCount -2.5) * 520 + (inventorY/120)*(4*260)
             }
-            console.log('inventorX', inventorX)
+            
           }
 
           m.x = b + n.leftPad + (m.subCol - 1) * n.subWidth + n.subWidth / 2;
           if (m.type === "Inventor" && inventors > 3) {
-            console.log('n.subWidth', n.subWidth)
             m.x = b + 40 + (m.subCol - 1) * 260 + 260 / 2 - inventorX
           } 
           
@@ -2251,11 +2253,10 @@
             if (maxX > m.x) {
               m.x = maxX
             } */
- 
+
             var inventorsYY = 0
             if (inventors > 4) {
               inventorsYY = Math.floor(1 + (inventors -5)/3) 
-              console.log('inventorsYY', inventorsYY)
             }
 
             m.y = t[0].subHeight + 
@@ -2345,7 +2346,7 @@
 
             if (m.type === "Inventor") {
               m.y =
-              c.lastIndexOf(m.execution_date) * t[0].subHeight +
+              c.indexOf(m.execution_date) * t[0].subHeight +
               t[0].subHeight / 2 + inventorY;
             }
 
@@ -2356,7 +2357,7 @@
             o.append("line")
               .attr("class", "tline")
               .datum(m)
-              .attr("x1", 70)
+              .attr("x1", 4)
               .attr("y1", m.y)
               .attr("x2", m.x - tlineDist)
               .attr("y2", m.y);
@@ -2502,7 +2503,7 @@
         o.append("text")
           .attr("class", "thead")
           .datum(n)
-          .attr("x", 80)
+          .attr("x", 14)
           .attr("y", (i + 0.5) * t[0].subHeight- 10) 
           .attr("dy", "0.32em")
           .text(n.replace("d", ""));
@@ -2511,7 +2512,7 @@
           o.append("text")
             .attr("class", "thead2")
             .datum(n)
-            .attr("x", 80)
+            .attr("x", 14)
             .attr("y", i * t[0].subHeight)
             .attr("dy", "0.32em")
             .text((new Date(n) - new Date(c[i - 1])) / ft + " days");
@@ -2709,7 +2710,7 @@
               e.push([i.x + 115, i.y - 30 + slotRight * 10]);
               e.push([i.x + 95, i.y - 30 + slotRight * 10]);
             }
-            if (t.x < i.x) {
+            if (t.x < i.x && t.type !== "Inventor") {
               var maxSlotLeft = i.connectLeft_short.length;
               var maxSlotRight = t.connectRight_short.length;
               i.connectLeft_short.forEach(function(v, i) {
@@ -2749,6 +2750,29 @@
               e.push([i.x - margin[1], i.y - margin[2] + slotLeft * margin[3]]);
               e.push([i.x - margin[0], i.y - margin[2] + slotLeft * margin[3]]);
             }
+            if (t.x < i.x && t.type === "Inventor") {
+              var maxSlotLeft = i.connectLeft_short.length;
+
+              i.connectLeft_short.forEach(function(v, i) {
+                if (n.date === v) {
+                  tmp_slot = i;
+                  if (tmp_slot >= 6) {
+                    tmp_slot = 6;
+                  }
+                  if (maxSlotLeft <= 5) {
+                    slotLeft = tmp_slot + 1;
+                  } else {
+                    slotLeft = tmp_slot;
+                  }
+                }
+              });
+
+              e.push([t.x, t.y+36]);
+              e.push([t.x, t.y+56]);
+              e.push([i.x, i.y-76]);
+              e.push([i.x, i.y-36]);
+            }
+
             if (t.x > i.x && t.type === "Inventor") {
               var maxSlotRight = i.connectRight_short.length;
 
