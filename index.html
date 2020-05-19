@@ -485,7 +485,7 @@
       Loading Data:
 
       */
-    d3.json("RE46768.json").then(function(data) {
+    d3.json("8682400.json").then(function(data) {
       data.comment = "";
 
       console.log('data', data)
@@ -2257,7 +2257,7 @@
 
             var inventorsYY = 0
             if (inventors > 4) {
-              inventorsYY = Math.floor(1 + (inventors -5)/3) 
+              inventorsYY = Math.floor(1 + (inventors -5)/3) + 1
             }
 
             m.y = (index - missing) * n.subHeight +
