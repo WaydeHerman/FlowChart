@@ -3945,10 +3945,7 @@
         });
 
 
-      function zoomFunction() {
-        console.log('zoom')
-        //var element = document.querySelector("svg");
-        //element.style.zoom = sval3;
+      /*function zoomFunction() {
         d3.select("svg")
           .style("transform", "scale(" + sval3 + ")")
           .style("-moz-transform", function() {
@@ -3957,7 +3954,7 @@
           .style("-moz-transform-origin", "top left")
           .style("transform-origin", "left top");
         d.style("zoom", sval3 * 0.9);
-      }
+      }*/
 
       //
       function update_blinks() {
@@ -4383,5 +4380,16 @@
         });
       //blink();
     });
+
+          function zoomFunction() {
+        d3.select("svg")
+          .style("transform", "scale(" + sval3 + ")")
+          .style("-moz-transform", function() {
+            return "scale(" + sval3 * 100 + "%)";
+          })
+          .style("-moz-transform-origin", "top left")
+          .style("transform-origin", "left top");
+        d.style("zoom", sval3 * 0.9);
+      }
   </script>
 </html>
