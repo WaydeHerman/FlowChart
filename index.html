@@ -69,7 +69,6 @@
       }
 
       #container .btext2 {
-        font-size: 12px;
         fill: #555;
       }
 
@@ -78,7 +77,6 @@
       }
 
       #container .box-3.btext {
-        font-size: 13px;
       }
 
       #container .connection {
@@ -487,7 +485,7 @@
       Loading Data:
 
       */
-    d3.json("10417432.json").then(function(data) {
+    d3.json("RE46768.json").then(function(data) {
       data.comment = "";
 
       console.log('data', data)
@@ -2103,7 +2101,7 @@
           return v.subCol
         }) * 240 * (t[0].items.length > 0 ? 1 : 0)
         } */
-        ownershipt = 1100;
+        ownershipt = 1000;
         var column3
               var inventorBlankDates = Math.ceil((inventors-4)/4)
       for (let i = 0; i < inventorBlankDates; i++) {
@@ -2119,6 +2117,9 @@
         global_height = window.innerHeight + 20;
       }
       global_height -= 80;
+      console.log('gw_a', et + 40 + u.right)
+      console.log('gw_b', ownershipt + 40 + u.right)
+      console.log('gw_c', window.innerWidth - 190)
       global_width = d3.max([et, ownershipt]) + 40 + u.right;
       if (global_width < window.innerWidth - 190) {
         global_width = window.innerWidth - 190;
@@ -2259,11 +2260,13 @@
               inventorsYY = Math.floor(1 + (inventors -5)/3) 
             }
 
-            m.y = t[0].subHeight + 
-              (index - missing) * n.subHeight +
+            m.y = (index - missing) * n.subHeight +
               n.subHeight / 2 +
               n.preHeight +
               st + (inventorsYY * 120)
+
+            console.log('m.y', m.y)
+            console.log('inventorsYY', inventorsYY)
               
 
             var boxThreeWidth = 190;
@@ -2444,7 +2447,7 @@
                 .text(m.name.substr(0, h))
                 .append("tspan")
                 .attr("x", m.x - 65)
-                .attr("dy", "1.2em")
+                .attr("dy", "1em")
                 .text(e);
             }
 
